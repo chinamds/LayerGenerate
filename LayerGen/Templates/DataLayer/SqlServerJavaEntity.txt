@@ -1,0 +1,58 @@
+﻿{$Comment1}
+package {26};
+
+import {26}.BaseObject;
+
+import org.hibernate.annotations.Type;
+import org.hibernate.search.annotations.DocumentId;
+import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.FieldBridge;
+import org.hibernate.search.annotations.Indexed;
+import org.hibernate.search.annotations.IndexedEmbedded;
+import org.hibernate.search.bridge.builtin.IntegerBridge;
+import  org.apache.commons.lang.builder.HashCodeBuilder;
+import  org.apache.commons.lang.builder.EqualsBuilder;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
+import javax.persistence.GeneratedValue;
+import static javax.persistence.GenerationType.IDENTITY;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.persistence.UniqueConstraint;
+
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+
+import javax.xml.bind.annotation.XmlRootElement;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+
+@Entity
+@Table(name="{9}"{4} )
+@Indexed
+@XmlRootElement
+public class {1} extends BaseObject implements Serializable {
+{3}
+
+{5}
+
+{6}
+
+{7}
+}

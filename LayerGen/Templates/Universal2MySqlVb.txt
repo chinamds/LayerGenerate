@@ -1,0 +1,160 @@
+﻿    Friend NotInheritable Class Mapper(Of T As Class)
+        Private Sub New()
+        End Sub
+        Private Shared ReadOnly PropertyMap As Dictionary(Of String, PropertyInfo)
+
+        Shared Sub New()
+            PropertyMap = GetType(T).GetProperties().ToDictionary(Function(p) p.Name.ToLower(), Function(p) p)
+        End Sub
+
+        Public Shared Sub Map(source As ExpandoObject, destination As T)
+            If source Is Nothing Then
+                Throw New ArgumentNullException("source")
+            End If
+            If destination Is Nothing Then
+                Throw New ArgumentNullException("destination")
+            End If
+
+            For Each kv In source
+                Dim p As PropertyInfo
+                If PropertyMap.TryGetValue(kv.Key.ToLower(), p) Then
+                    Dim propType = p.PropertyType
+                    If kv.Value Is Nothing Then
+                        If Not propType.IsByRef AndAlso propType.Name <> "Nullable`1" Then
+                            Throw New ArgumentException("not nullable")
+                        End If
+                    End If
+                    p.SetValue(destination, If(IsDBNull(kv.Value), Nothing, kv.Value), Nothing)
+                End If
+            Next
+        End Sub
+    End Class
+
+    Public NotInheritable Class ExecuteNonQuery
+        Private Sub New()
+        End Sub
+        ''' <summary>
+        ''' Executes a stored procedure that does not return any results.
+        ''' </summary>
+        ''' <param name="procedureName">The name of the stored procedure to execute.</param>
+        ''' <param name="procedureParams">A dictionary of parameter/value pairs. This can be null if there are no parameters.</param>
+        ''' <returns>The number of rows affected.</returns>
+        Public Shared Function FromStoredProcedure(procedureName As String, procedureParams As Dictionary(Of String, Object)) As Integer
+            Return {0}.Universal.ExecuteNonQueryFromStoredProcedure(procedureName, procedureParams)
+        End Function
+
+        ''' <summary>
+        ''' Executes a stored procedure that does not return any results.
+        ''' </summary>
+        ''' <param name="procedureName">The name of the stored procedure to execute.</param>
+        ''' <returns>The number of rows affected.</returns>
+        Public Shared Function FromStoredProcedure(procedureName As String) As Integer
+            Return FromStoredProcedure(procedureName, Nothing)
+        End Function
+
+        ''' <summary>
+        ''' Executes a Sql query that does not return any results.
+        ''' </summary>
+        ''' <param name="sql">The sql query to execute.</param>
+        ''' <param name="sqlParams">Optional <see cref="System.String.Format"/> like parameters</param>
+        ''' <returns>The number of rows affected.</returns>
+        Public Shared Function FromSqlStatement(sql As String, ParamArray sqlParams As Object()) As Integer
+            Return {0}.Universal.ExecuteNonQueryFromSqlStatement(sql, sqlParams)
+        End Function
+    End Class
+
+    Public NotInheritable Class LoadData
+        Private Sub New()
+        End Sub
+        ''' <summary>
+        ''' Loads data from a Sql query and returns the results in a list
+        ''' </summary>
+        ''' <typeparam name="T">The type of class to load the data into</typeparam>
+        ''' <param name="sql">The sql query to execute.</param>
+        ''' <param name="sqlParams">Optional <see cref="System.String.Format"/> like parameters</param>
+        ''' <returns>A list of type T containing the results of the query</returns>
+        Public Shared Function FromSqlStatement(Of T As {Class, New})(sql As String, ParamArray sqlParams As Object()) As List(Of T)
+            Dim dt As DataTable = {0}.Universal.GetDataFromSqlStatement(sql, sqlParams)
+            Dim objects = New List(Of Object)()
+
+            For Each row As DataRow In dt.Rows
+                Dim obj = New ExpandoObject()
+
+                For Each column As DataColumn In dt.Columns
+                    Dim x = DirectCast(obj, IDictionary(Of String, Object))
+                    x.Add(column.ColumnName, row(column.ColumnName))
+                Next
+                objects.Add(obj)
+            Next
+
+            Dim retval = New List(Of T)()
+            For Each item As ExpandoObject In objects
+                Dim o = New T()
+                Mapper(Of T).Map(item, o)
+                retval.Add(o)
+            Next
+
+            Return retval
+        End Function
+
+        ''' <summary>
+        ''' Loads data from a stored procedure and returns the results in a list
+        ''' </summary>
+        ''' <typeparam name="T">The type of class to load the data into</typeparam>
+        ''' <param name="procedureName">The name of the stored procedure to execute</param>
+        ''' <returns>A list of type T containing the results of the query</returns>
+        Public Shared Function FromStoredProcedure(Of T As {Class, New})(procedureName As String) As List(Of T)
+            Dim dt As DataTable = {0}.Universal.GetDataFromStoredProcedure(procedureName, Nothing)
+            Dim objects = New List(Of Object)()
+
+            For Each row As DataRow In dt.Rows
+                Dim obj = New ExpandoObject()
+
+                For Each column As DataColumn In dt.Columns
+                    Dim x = DirectCast(obj, IDictionary(Of String, Object))
+                    x.Add(column.ColumnName, row(column.ColumnName))
+                Next
+                objects.Add(obj)
+            Next
+
+            Dim retval = New List(Of T)()
+            For Each item As ExpandoObject In objects
+                Dim o = New T()
+                Mapper(Of T).Map(item, o)
+                retval.Add(o)
+            Next
+
+            Return retval
+        End Function
+
+        ''' <summary>
+        ''' Loads data from a stored procedure and returns the results in a list
+        ''' </summary>
+        ''' <typeparam name="T">The type of class to load the data into</typeparam>
+        ''' <param name="procedureName">The name of the stored procedure to execute</param>
+        ''' <param name="procedureParams">A dictionary of parameter/value pairs. This can be null if there are no parameters.</param>
+        ''' <returns>A list of type T containing the results of the query</returns>
+        Public Shared Function FromStoredProcedure(Of T As {Class, New})(procedureName As String, procedureParams As Dictionary(Of String, Object)) As List(Of T)
+            Dim dt As DataTable = {0}.Universal.GetDataFromStoredProcedure(procedureName, procedureParams)
+            Dim objects = New List(Of Object)()
+
+            For Each row As DataRow In dt.Rows
+                Dim obj = New ExpandoObject()
+
+                For Each column As DataColumn In dt.Columns
+                    Dim x = DirectCast(obj, IDictionary(Of String, Object))
+                    x.Add(column.ColumnName, row(column.ColumnName))
+                Next
+                objects.Add(obj)
+            Next
+
+            Dim retval = New List(Of T)()
+            For Each item As ExpandoObject In objects
+                Dim o = New T()
+                Mapper(Of T).Map(item, o)
+                retval.Add(o)
+            Next
+
+            Return retval
+        End Function
+    End Class

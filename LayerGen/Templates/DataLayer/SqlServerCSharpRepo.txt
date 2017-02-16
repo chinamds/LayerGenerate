@@ -1,0 +1,68 @@
+﻿{$Comment1}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using {101};
+using {101}.Interfaces;
+
+namespace {26}
+{
+	public class {1}Repository : Repository<{13}, {1}Dto>
+    {
+        public {1}Repository()
+        {
+        }
+
+        public {1}Repository({13} ctx)
+        {
+            Context = ctx;
+        }
+
+		/// <summary>
+        /// Fill the <paramref name="emptyCollection"/> with all the media templates in the current application. The return value is the same reference
+        /// as the parameter.
+        /// </summary>
+        /// <param name="emptyCollection">An empty <see cref="I{1}Collection"/> object to populate with the list of {8}s in the current
+        /// application. This parameter is required because the library that implements this interface does not have
+        /// the ability to directly instantiate any object that implements <see cref="I{1}Collection"/>.</param>
+        /// <returns>
+        /// Returns an <see cref="I{1}Collection"/> representing the {8}s in the current application. The returned object is the
+        /// same object in memory as the <paramref name="emptyCollection"/> parameter.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="emptyCollection" /> is null.</exception>
+        public I{1}Collection Get{1}s(I{1}Collection emptyCollection)
+        {
+            if (emptyCollection == null)
+                throw new ArgumentNullException("emptyCollection");
+
+            if (emptyCollection.Count > 0)
+            {
+                emptyCollection.Clear();
+            }
+
+            foreach ({1}Dto {8}Dto in Context.{1}s) //.OrderBy(d => d.{1}ID)
+            {
+                var {8} = emptyCollection.CreateEmpty{1}Instance();
+				var asType = typeof({1}Dto);;
+				foreach (var prop in {8}.GetType().GetProperties())
+				{
+					var propDb = asType.GetProperty(prop.Name);
+					if (propDb == null)
+					{
+						continue;
+					}
+
+					object test = propDb.GetValue({8}Dto, null);
+					if (test != null)
+					{
+						prop.SetValue({8}, test, null);
+					}
+				}
+
+                emptyCollection.Add({8});
+            }
+
+            return emptyCollection;
+        }
+	}
+}

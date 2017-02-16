@@ -1,0 +1,180 @@
+﻿    internal static class Mapper<T>
+    where T : class
+    {
+        private static readonly Dictionary<string, PropertyInfo> PropertyMap;
+
+        static Mapper()
+        {
+            PropertyMap = typeof(T).GetProperties().ToDictionary(p => p.Name.ToLower(), p => p);
+        }
+
+        public static void Map(ExpandoObject source, T destination)
+        {
+            if (source == null)
+                throw new ArgumentNullException("source");
+            if (destination == null)
+                throw new ArgumentNullException("destination");
+
+            foreach (var kv in source)
+            {
+                PropertyInfo p;
+                if (PropertyMap.TryGetValue(kv.Key.ToLower(), out p))
+                {
+                    var propType = p.PropertyType;
+                    if (kv.Value == null)
+                    {
+                        if (!propType.IsByRef && propType.Name != "Nullable`1")
+                        {
+                            throw new ArgumentException("not nullable");
+                        }
+                    }
+                    p.SetValue(destination, kv.Value == DBNull.Value ? default(T) : kv.Value, null);
+                }
+            }
+        }
+    }
+
+    public static class ExecuteNonQuery
+    {
+        /// <summary>
+        /// Executes a stored procedure that does not return any results.
+        /// </summary>
+        /// <param name="procedureName">The name of the stored procedure to execute.</param>
+        /// <param name="procedureParams">A dictionary of parameter/value pairs. This can be null if there are no parameters.</param>
+        /// <returns>The number of rows affected.</returns>
+        public static int FromStoredProcedure(string procedureName, Dictionary<string, object> procedureParams)
+        {
+            return {0}.Universal.ExecuteNonQueryFromStoredProcedure(procedureName, procedureParams);
+        }
+
+        /// <summary>
+        /// Executes a stored procedure that does not return any results.
+        /// </summary>
+        /// <param name="procedureName">The name of the stored procedure to execute.</param>
+        /// <returns>The number of rows affected.</returns>
+        public static int FromStoredProcedure(string procedureName)
+        {
+            return FromStoredProcedure(procedureName, null);
+        }
+
+        /// <summary>
+        /// Executes a Sql query that does not return any results.
+        /// </summary>
+        /// <param name="sql">The sql query to execute.</param>
+        /// <param name="sqlParams">Optional <see cref="System.String.Format"/> like parameters</param>
+        /// <returns>The number of rows affected.</returns>
+        public static int FromSqlStatement(string sql, params object[] sqlParams)
+        {
+            return {0}.Universal.ExecuteNonQueryFromSqlStatement(sql, sqlParams);
+        }
+    }
+
+    public static class LoadData
+    {
+        /// <summary>
+        /// Loads data from a Sql query and returns the results in a list
+        /// </summary>
+        /// <typeparam name="T">The type of class to load the data into</typeparam>
+        /// <param name="sql">The sql query to execute.</param>
+        /// <param name="sqlParams">Optional <see cref="System.String.Format"/> like parameters</param>
+        /// <returns>A list of type T containing the results of the query</returns>
+        public static List<T> FromSqlStatement<T>(string sql, params object[] sqlParams)
+            where T : class, new()
+        {
+            DataTable dt = {0}.Universal.GetDataFromSqlStatement(sql, sqlParams);
+            var objects = new List<dynamic>();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                dynamic obj = new ExpandoObject();
+
+                foreach (DataColumn column in dt.Columns)
+                {
+                    var x = (IDictionary<string, object>)obj;
+                    x.Add(column.ColumnName, row[column.ColumnName]);
+                }
+                objects.Add(obj);
+            }
+
+            var retval = new List<T>();
+            foreach (dynamic item in objects)
+            {
+                var o = new T();
+                Mapper<T>.Map(item, o);
+                retval.Add(o);
+            }
+
+            return retval;
+        }
+
+        /// <summary>
+        /// Loads data from a stored procedure and returns the results in a list
+        /// </summary>
+        /// <typeparam name="T">The type of class to load the data into</typeparam>
+        /// <param name="procedureName">The name of the stored procedure to execute</param>
+        /// <returns>A list of type T containing the results of the query</returns>
+        public static List<T> FromStoredProcedure<T>(string procedureName)
+            where T : class, new()
+        {
+            DataTable dt = {0}.Universal.GetDataFromStoredProcedure(procedureName, null);
+            var objects = new List<dynamic>();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                dynamic obj = new ExpandoObject();
+
+                foreach (DataColumn column in dt.Columns)
+                {
+                    var x = (IDictionary<string, object>)obj;
+                    x.Add(column.ColumnName, row[column.ColumnName]);
+                }
+                objects.Add(obj);
+            }
+
+            var retval = new List<T>();
+            foreach (dynamic item in objects)
+            {
+                var o = new T();
+                Mapper<T>.Map(item, o);
+                retval.Add(o);
+            }
+
+            return retval;
+        }
+
+        /// <summary>
+        /// Loads data from a stored procedure and returns the results in a list
+        /// </summary>
+        /// <typeparam name="T">The type of class to load the data into</typeparam>
+        /// <param name="procedureName">The name of the stored procedure to execute</param>
+        /// <param name="procedureParams">A dictionary of parameter/value pairs. This can be null if there are no parameters.</param>
+        /// <returns>A list of type T containing the results of the query</returns>
+        public static List<T> FromStoredProcedure<T>(string procedureName, Dictionary<string, object> procedureParams)
+            where T : class, new()
+        {
+            DataTable dt = {0}.Universal.GetDataFromStoredProcedure(procedureName, procedureParams);
+            var objects = new List<dynamic>();
+
+            foreach (DataRow row in dt.Rows)
+            {
+                dynamic obj = new ExpandoObject();
+
+                foreach (DataColumn column in dt.Columns)
+                {
+                    var x = (IDictionary<string, object>)obj;
+                    x.Add(column.ColumnName, row[column.ColumnName]);
+                }
+                objects.Add(obj);
+            }
+
+            var retval = new List<T>();
+            foreach (dynamic item in objects)
+            {
+                var o = new T();
+                Mapper<T>.Map(item, o);
+                retval.Add(o);
+            }
+
+            return retval;
+        }
+    }

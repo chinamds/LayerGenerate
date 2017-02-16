@@ -1,0 +1,360 @@
+﻿{$Comment1}
+using System;
+using System.Collections.Generic;
+using System.Data;
+
+namespace {27}
+{
+    [Serializable]
+    public partial class {0} : {26}.{0}
+    {
+        {/*}public enum ConcurrencyOptions
+        {
+            /// <summary>
+            /// Concurrency checking is disabled
+            /// </summary>
+            Ignore = 0,
+            /// <summary>
+            /// Concurrency checking is checked and an exception is thrown if the data changed
+            /// </summary>
+            Strict = 1
+		}{*/}
+
+        public enum Fields
+        {
+{3}
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class.
+        /// </summary>
+        public {0}() : base()
+        {
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class,
+        /// optionally using stored procedures or Sql text.
+        /// </summary>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text.</param>
+        public {0}(bool useStoredProcedures) : base(useStoredProcedures)
+        {
+            
+        }
+
+{/*}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, loading a
+        /// row from the database that matches the given primary key.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        public {0}({1} id) : base(id)
+        {
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, loading a
+        /// row from the database that matches the given primary key and optionally
+        /// using stored procedures or Sql text.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text.</param>
+        public {0}({1} id, bool useStoredProcedures) : base(id, useStoredProcedures)
+        {
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, loading a
+        /// row from the database that matches the given primary key and loading
+        /// only the fields specified.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="fields">The list of <see cref="{27}.{0}.Fields"/> to pull from the database.</param>
+		public {0}({1} id, List<Fields> fields) : base(id, fields)
+        {
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, loading a
+        /// row from the database that matches the given primary key and loading
+        /// only the fields specified. You can also specify if you want data access
+        /// to be done with stored procedures or Sql text.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="fields">The list of <see cref="{27}.{0}.Fields"/> to pull from the database.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text.</param>
+		public {0}({1} id, List<Fields> fields, bool useStoredProcedures) : base(id, fields, useStoredProcedures)
+        {
+            
+        }
+{*/}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, loading a
+        /// row from the given DataRow.
+        /// </summary>
+        /// <param name="dr">The DataRow that contains the data to be loaded into the instance.</param>
+        protected internal {0}(DataRow dr) : base(dr)
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, loading a
+        /// row from the given DataRow. You can also specify if you want data access
+        /// to be done with stored procedures or Sql text.
+        /// </summary>
+        /// <param name="dr">The DataRow that contains the data to be loaded into the instance.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text.</param>
+        protected internal {0}(DataRow dr, bool useStoredProcedures) : base(dr, useStoredProcedures)
+        {
+
+        }
+
+        {/*}/// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, explicitly enabling
+        /// or disabling the concurrency option.
+        /// </summary>
+        /// <param name="concurrency">A <see cref="{27}.{0}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+        public {0}(ConcurrencyOptions concurrency) : base(concurrency)
+        {
+            
+        }
+
+		/// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, explicitly enabling
+        /// or disabling the concurrency option. You can also specify if you want data access
+        /// to be done with stored procedures or Sql text.
+        /// </summary>
+        /// <param name="concurrency">A <see cref="{27}.{0}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text.</param>
+        public {0}(ConcurrencyOptions concurrency, bool useStoredProcedures) : base(concurrency, useStoredProcedures)
+        {
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, loading a
+        /// row from the database that matches the given primary key and explicitly
+        /// enabling or disabling the concurrency option.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="concurrency">A <see cref="{27}.{0}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+        public {0}({1} id, ConcurrencyOptions concurrency) : base(id, concurrency)
+        {
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, loading a
+        /// row from the database that matches the given primary key and explicitly
+        /// enabling or disabling the concurrency option. You can also specify if you want data
+        /// access to be done with stored procedures or Sql text.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="concurrency">A <see cref="{27}.{0}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text.</param>
+        public {0}({1} id, ConcurrencyOptions concurrency, bool useStoredProcedures) : base(id, concurrency, useStoredProcedures)
+        {
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, loading a
+        /// row from the database that matches the given primary key and loading
+        /// only the fields specified and explicitly enabling or disabling the
+        /// concurrency option.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="fields">The list of <see cref="{27}.{0}.Fields"/> to pull from the database.</param>
+        /// <param name="concurrency">A <see cref="{27}.{0}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+		public {0}({1} id, List<Fields> fields, ConcurrencyOptions concurrency) : base(id, fields, concurrency)
+        {
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, loading a
+        /// row from the database that matches the given primary key and loading
+        /// only the fields specified and explicitly enabling or disabling the
+        /// concurrency option. You can also specify if you want data access to be
+        /// done with stored procedures or Sql text.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="fields">The list of <see cref="{27}.{0}.Fields"/> to pull from the database.</param>
+        /// <param name="concurrency">A <see cref="{27}.{0}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text.</param>
+		public {0}({1} id, List<Fields> fields, ConcurrencyOptions concurrency, bool useStoredProcedures) : base(id, fields, concurrency, useStoredProcedures)
+        {
+            
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, loading a
+        /// row from the given DataRow and explicitly enabling or disabling the
+        /// concurrency option.
+        /// </summary>
+        /// <param name="dr">The DataRow that contains the data to be loaded into the instance.</param>
+        /// <param name="concurrency">A <see cref="{27}.{0}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+        protected internal {0}(DataRow dr, ConcurrencyOptions concurrency) : base(dr, concurrency)
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{0}"/> class, loading a
+        /// row from the given DataRow and explicitly enabling or disabling the
+        /// concurrency option. You can also specify if you want data access to be
+        /// done with stored procedures or Sql text.
+        /// </summary>
+        /// <param name="dr">The DataRow that contains the data to be loaded into the instance.</param>
+        /// <param name="concurrency">A <see cref="{27}.{0}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text.</param>
+        protected internal {0}(DataRow dr, ConcurrencyOptions concurrency, bool useStoredProcedures) : base(dr, concurrency, useStoredProcedures)
+        {
+
+        }{*/}
+
+        /// <summary>
+        /// The name of the table
+        /// </summary>
+        public static string LgTableName
+        {
+            get { return LayerGenTableName; }
+        }
+
+        /// <summary>
+        /// The name of table, delimited with backticks
+        /// e.g. "`{99}`" instead of "{99}"
+        /// </summary>
+        public static string LgTableNameDelimited
+        {
+            get { return LayerGenTableNameDelimited; }
+        }
+
+        protected internal bool IsUpdate()
+        {
+            return _isUpdate;
+        }
+{/*}
+        /// <summary>
+        /// The name of the primary key in the table
+        /// </summary>
+        public static string LgPrimaryKeyName
+        {
+            get { return LayerGenPrimaryKey; }
+        }{*/}
+{34}
+    }
+
+    /// <summary>
+    /// Represents a collection of <see cref="{0}"/> objects.
+    /// </summary>
+    [Serializable]
+    public class {0}s : List<{0}>
+    {
+        private readonly bool _useStoredProcedures;
+        {/*}private readonly {0}.ConcurrencyOptions _concurrency;
+
+        public {0}s({0}.ConcurrencyOptions concurrency)
+        {
+            _concurrency = concurrency;
+            _useStoredProcedures = false;
+		}
+
+        public {0}s({0}.ConcurrencyOptions concurrency, bool useStoredProcedures)
+        {
+            _useStoredProcedures = useStoredProcedures;
+            _concurrency = concurrency;
+		}
+		{*/}
+        public {0}s()
+        {
+            {/*}_concurrency = {0}.ConcurrencyOptions.Ignore;{*/}
+            _useStoredProcedures = false;
+		}
+
+        public {0}s(bool useStoredProcedures)
+        {
+            {/*}_concurrency = {0}.ConcurrencyOptions.Ignore;{*/}
+            _useStoredProcedures = useStoredProcedures;
+		}
+
+        protected void Load(DataRowCollection dataRows)
+        {
+            Clear();
+            foreach (DataRow dr in dataRows)
+            {
+                Add(new {0}(dr{/*}, _concurrency{*/}, _useStoredProcedures));
+            }
+        }
+
+{2}
+        /// <summary>
+        /// Retrieves rows from the {0} table by executing the given stored procedure.
+        /// </summary>
+        /// <param name="procedureName">The name of the stored procedure to execute.</param>
+        /// <param name="procedureParams">A dictionary of parameter/value pairs. This can be null if there are no parameters.</param>
+        public void GetByStoredProcedure(string procedureName, Dictionary<string, object> procedureParams)
+        {
+            DataTable dt = {26}.{0}.GetByStoredProcedure(procedureName, procedureParams);
+            if (dt != null)
+            {
+                Load(dt.Rows);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves rows from the {0} table by executing the given stored procedure.
+        /// </summary>
+        /// <param name="procedureName">The name of the stored procedure to execute.</param>
+        public void GetByStoredProcedure(string procedureName)
+        {
+            DataTable dt = {26}.{0}.GetByStoredProcedure(procedureName, null);
+            if (dt != null)
+            {
+                Load(dt.Rows);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves rows from the {0} table, based on the given SQL statement.
+        /// </summary>
+        /// <param name="sql">The SQL statement to execute.</param>
+        /// <param name="sqlParams">Optional <see cref="System.String.Format"/> like parameters</param>
+        public void GetBySqlStatement(string sql, params object[] sqlParams)
+        {
+            DataTable dt = {26}.{0}.GetBySqlStatement(sql, sqlParams);
+            if (dt != null)
+            {
+                Load(dt.Rows);
+            }
+        }
+
+        /// <summary>
+        /// Retrieves all the rows from the {0} table.
+        /// </summary>
+        public void GetAll()
+        {
+		    GetAll(_useStoredProcedures);
+        }
+
+        /// <summary>
+        /// Retrieves all the rows from the {0} table.
+        /// </summary>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text</param>
+        private void GetAll(bool useStoredProcedures)
+        {
+            DataTable dt = {26}.{0}.GetAll(useStoredProcedures);
+            if (dt != null)
+            {
+                Load(dt.Rows);
+            }
+        }
+{33}
+    }
+}
+

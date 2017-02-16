@@ -1,0 +1,38 @@
+﻿{$Comment1}
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+
+namespace {26}
+{
+    public interface I{1}
+    {
+{2}
+
+		/// <summary>
+		/// Gets a value indicating whether this object is new and has not yet been persisted to the data store.
+		/// </summary>
+		/// <value><c>true</c> if this instance is new; otherwise, <c>false</c>.</value>
+		bool IsNew
+        {
+            get;
+        }
+
+        /// <summary>
+		/// Creates a deep copy of this instance.
+		/// </summary>
+		/// <returns>Returns a deep copy of this instance.</returns>
+		I{1} Copy();
+
+        /// <summary>
+        /// Persist this {8} object to the data store.
+        /// </summary>
+        void Save();
+
+        /// <summary>
+        /// Permanently delete the current {8} from the data store, including all related records. This action cannot
+        /// be undone.
+        /// </summary>
+        void Delete();
+	}
+}

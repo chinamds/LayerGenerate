@@ -1,0 +1,87 @@
+﻿        ''' <summary>
+        ''' Executes a Sql query that does not return any results.
+        ''' </summary>
+        ''' <param name="sql">The sql query to execute.</param>
+        ''' <param name="sqlParams">Optional <see cref="System.String.Format"/> like parameters</param>
+        ''' <returns></returns>
+        Friend Shared Function ExecuteNonQueryFromSqlStatement(sql As String, ParamArray sqlParams As Object()) As Integer
+            Dim paramNdx As Integer = 0
+            Dim valNdx As Integer = 1
+            Dim paramValDictionary = New Dictionary(Of String, String)()
+
+            For Each param As Object In sqlParams
+                If TypeOf param Is String Then
+                    sql = sql.Replace("'{" & paramNdx & "}'", "@val" & valNdx)
+                    sql = sql.Replace("{" & paramNdx & "}", "@val" & valNdx)
+                    paramValDictionary.Add("@val" & valNdx, DirectCast(param, String))
+                    valNdx += 1
+                Else
+                    sql = sql.Replace("{" & paramNdx & "}", param.ToString())
+                End If
+                paramNdx += 1
+            Next
+
+            Using connection = New SQLiteConnection()
+                connection.ConnectionString = GetConnectionString()
+                Using command = New SQLiteCommand()
+                    command.Connection = connection
+                    command.CommandType = CommandType.Text
+                    command.CommandText = sql
+                    For Each kvp As KeyValuePair(Of String, String) In paramValDictionary
+                        command.Parameters.AddWithValue(kvp.Key, kvp.Value)
+                    Next
+
+                    connection.Open()
+                    Return command.ExecuteNonQuery()
+                End Using
+            End Using
+        End Function
+
+        ''' <summary>
+        ''' Retrieves rows from a Sql Server Database based on a query
+        ''' </summary>
+        ''' <param name="sql">The Sql query to execute</param>
+        ''' <param name="sqlParams">Optional <see cref="System.String.Format"/> like parameters</param>
+        ''' <returns>A <see cref="System.Data.DataTable" /> with all the data.</returns>
+        Friend Shared Function GetDataFromSqlStatement(sql As String, ParamArray sqlParams As Object()) As DataTable
+            Dim paramNdx As Integer = 0
+            Dim valNdx As Integer = 1
+            Dim paramValDictionary = New Dictionary(Of String, String)()
+
+            For Each param As Object In sqlParams
+                If TypeOf param Is String Then
+                    sql = sql.Replace("'{" & paramNdx & "}'", "@val" & valNdx)
+                    sql = sql.Replace("{" & paramNdx & "}", "@val" & valNdx)
+                    paramValDictionary.Add("@val" & valNdx, DirectCast(param, String))
+                    valNdx += 1
+                Else
+                    sql = sql.Replace("{" & paramNdx & "}", param.ToString())
+                End If
+                paramNdx += 1
+            Next
+
+            Using connection As New SQLiteConnection()
+                connection.ConnectionString = GetConnectionString()
+                Using command As New SQLiteCommand()
+                    command.Connection = connection
+                    command.CommandType = CommandType.Text
+                    command.CommandText = sql
+                    For Each kvp As KeyValuePair(Of String, String) In paramValDictionary
+                        command.Parameters.AddWithValue(kvp.Key, kvp.Value)
+                    Next
+
+                    connection.Open()
+                    Using adapter As New SQLiteDataAdapter()
+                        Using ds As New DataSet()
+                            adapter.SelectCommand = command
+                            adapter.Fill(ds)
+
+                            If ds.Tables.Count > 0 Then
+                                Return ds.Tables(0)
+                            End If
+                        End Using
+                    End Using
+                End Using
+            End Using
+            Return Nothing
+        End Function        

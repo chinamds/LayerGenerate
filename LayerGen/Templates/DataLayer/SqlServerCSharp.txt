@@ -1,0 +1,137 @@
+﻿{$Comment1}
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Globalization;
+using {101}.Interfaces; //Business
+using {101}.Properties; //Business
+using {100}; //Data
+using {102}.CustomExceptions; //Event Log
+
+namespace {26}
+{
+    public class {5} : I{1}, IComparable
+    {
+{2}
+       
+{7}        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{5}"/> class.
+        /// </summary>
+        public {5}()
+        {
+			{11}
+        }
+
+		/// <summary>
+        /// Initializes a new instance of the <see cref="{5}"/> class from variables.
+        /// </summary>
+        public {5}({15})
+        {
+{16}
+        }
+
+		/// <summary>
+        /// Initializes a new instance of the <see cref="{5}"/> class from the data stroe.
+        /// </summary>
+        public {5}({1}Dto {8}Dto)
+        {
+			CopyFrom({8}Dto);
+        }
+
+		/// <summary>
+        /// copy from {8} data.
+        /// </summary>
+        public void CopyFrom({1}Dto {8}Dto)
+        {
+			if ({8}Dto != null)
+			{
+{13}
+			}
+        }
+
+		/// <summary>
+        /// copy to {8} data.
+        /// </summary>
+        public void CopyTo(ref {1}Dto {8}Dto)
+        {
+			if ({8}Dto != null)
+			{
+{14}
+			}
+        }
+	
+		/// <summary>
+		/// Gets a value indicating whether this object is new and has not yet been persisted to the data store.
+		/// </summary>
+		/// <value><c>true</c> if this instance is new; otherwise, <c>false</c>.</value>
+		public bool IsNew
+        {
+            get
+            {
+                return ({10});
+            }
+        }
+
+		#region Public Methods
+
+        /// <summary>
+        /// Creates a deep copy of this instance.
+        /// </summary>
+        /// <returns>Returns a deep copy of this instance.</returns>
+        public I{1} Copy()
+        {
+            {3}
+        }
+
+        /// <summary>
+        /// Persist this {8} object to the data store.
+        /// </summary>
+        public void Save()
+        {
+{4}
+        }
+
+        /// <summary>
+        /// Permanently delete the current {8} from the data store, including all related records. This action cannot
+        /// be undone.
+        /// </summary>
+        public void Delete()
+        {
+            using (var repo = new {1}Repository())
+            {
+               {6}
+            }
+        }
+
+        #endregion
+
+        #region IComparable Members
+
+        /// <summary>
+        /// Compares the current instance with another object of the same type.
+        /// </summary>
+        /// <param name="obj">An object to compare with this instance.</param>
+        /// <returns>
+        /// A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has these meanings: Value Meaning Less than zero This instance is less than <paramref name="obj"/>. Zero This instance is equal to <paramref name="obj"/>. Greater than zero This instance is greater than <paramref name="obj"/>.
+        /// </returns>
+        /// <exception cref="T:System.ArgumentException">
+        /// 	<paramref name="obj"/> is not the same type as this instance. </exception>
+        public int CompareTo(object obj)
+		{
+			if (obj == null)
+				return 1;
+			else
+			{
+				I{1} other = obj as I{1};
+				if (other != null)
+					return this.{9}.CompareTo(other.{9});
+				else
+					return 1;
+			}
+		}
+
+		#endregion
+    }
+}

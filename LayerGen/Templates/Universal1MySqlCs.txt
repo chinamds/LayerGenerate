@@ -1,0 +1,189 @@
+﻿        /// <summary>
+        /// Executes a stored procedure that does not return any results.
+        /// </summary>
+        /// <param name="procedureName">The name of the stored procedure to execute.</param>
+        /// <param name="procedureParams">A dictionary of parameter/value pairs. This can be null if there are no parameters.</param>
+        /// <returns>The number of rows affected.</returns>
+        internal static int ExecuteNonQueryFromStoredProcedure(string procedureName, Dictionary<string, object> procedureParams)
+        {
+            using (var connection = new MySqlConnection())
+            {
+                connection.ConnectionString = GetConnectionString();
+                using (var command = new MySqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = procedureName;
+                    if (procedureParams != null && procedureParams.Count > 0)
+                    {
+                        foreach (KeyValuePair<string, object> kvp in procedureParams)
+                        {
+                            command.Parameters.AddWithValue(kvp.Key, kvp.Value);
+                        }
+                    }
+
+                    connection.Open();
+                    return command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Executes a Sql query that does not return any results.
+        /// </summary>
+        /// <param name="sql">The sql query to execute.</param>
+        /// <param name="sqlParams">Optional <see cref="System.String.Format"/> like parameters</param>
+        /// <returns></returns>
+        internal static int ExecuteNonQueryFromSqlStatement(string sql, params object[] sqlParams)
+        {
+            int paramNdx = 0;
+            int valNdx = 1;
+            var paramValDictionary = new Dictionary<string, string>();
+
+            foreach (object param in sqlParams)
+            {
+                if (param is string)
+                {
+                    sql = sql.Replace("'{" + paramNdx + "}'", "@val" + valNdx);
+                    sql = sql.Replace("{" + paramNdx + "}", "@val" + valNdx);
+                    paramValDictionary.Add("@val" + valNdx, (string)param);
+                    valNdx++;
+                }
+                else
+                {
+                    sql = sql.Replace("{" + paramNdx + "}", param.ToString());
+                }
+                paramNdx++;
+            }
+
+            using (var connection = new MySqlConnection())
+            {
+                connection.ConnectionString = GetConnectionString();
+                using (var command = new MySqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = sql;
+                    foreach (KeyValuePair<string, string> kvp in paramValDictionary)
+                    {
+                        command.Parameters.AddWithValue(kvp.Key, kvp.Value);
+                    }
+
+                    connection.Open();
+                    return command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retrieves rows from a Sql Server Database based on a query
+        /// </summary>
+        /// <param name="sql">The Sql query to execute</param>
+        /// <param name="sqlParams">Optional <see cref="System.String.Format"/> like parameters</param>
+        /// <returns>A <see cref="System.Data.DataTable" /> with all the data.</returns>
+        internal static DataTable GetDataFromSqlStatement(string sql, params object[] sqlParams)
+        {
+            int paramNdx = 0;
+            int valNdx = 1;
+            var paramValDictionary = new Dictionary<string, string>();
+
+            foreach (object param in sqlParams)
+            {
+                if (param is string)
+                {
+                    sql = sql.Replace("'{" + paramNdx + "}'", "@val" + valNdx);
+                    sql = sql.Replace("{" + paramNdx + "}", "@val" + valNdx);
+                    paramValDictionary.Add("@val" + valNdx, (string)param);
+                    valNdx++;
+                }
+                else
+                {
+                    sql = sql.Replace("{" + paramNdx + "}", param.ToString());
+                }
+                paramNdx++;
+            }
+
+            using (var connection = new MySqlConnection())
+            {
+                connection.ConnectionString = GetConnectionString();
+                using (var command = new MySqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = sql;
+                    foreach (KeyValuePair<string, string> kvp in paramValDictionary)
+                    {
+                        command.Parameters.AddWithValue(kvp.Key, kvp.Value);
+                    }
+
+                    connection.Open();
+                    using (var adapter = new MySqlDataAdapter())
+                    {
+                        using (var ds = new DataSet())
+                        {
+                            adapter.SelectCommand = command;
+                            adapter.Fill(ds);
+
+                            if (ds.Tables.Count > 0)
+                            {
+                                return ds.Tables[0];
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Retrieves rows from a Sql Server Database based on a stored procedure.
+        /// </summary>
+        /// <param name="procedureName">The name of the stored procedure to execute.</param>
+        /// <param name="procedureParams">A dictionary of parameter/value pairs. This can be null if there are no parameters.</param>
+        /// <returns>A <see cref="System.Data.DataTable" /> with all the data.</returns>
+        internal static DataTable GetDataFromStoredProcedure(string procedureName, Dictionary<string, object> procedureParams)
+        {
+            using (var connection = new MySqlConnection())
+            {
+                connection.ConnectionString = GetConnectionString();
+                using (var command = new MySqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = procedureName;
+                    if (procedureParams != null && procedureParams.Count > 0)
+                    {
+                        foreach (KeyValuePair<string, object> kvp in procedureParams)
+                        {
+                            command.Parameters.AddWithValue(kvp.Key, kvp.Value);
+                        }
+                    }
+
+                    connection.Open();
+                    using (var adapter = new MySqlDataAdapter())
+                    {
+                        using (var ds = new DataSet())
+                        {
+                            adapter.SelectCommand = command;
+                            adapter.Fill(ds);
+
+                            if (ds.Tables.Count > 0)
+                            {
+                                return ds.Tables[0];
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Retrieves rows from a Sql Server Database based on a stored procedure.
+        /// </summary>
+        /// <param name="procedureName">The name of the stored procedure to execute.</param>
+        /// <returns>A <see cref="System.Data.DataTable" /> with all the data.</returns>
+        public static DataTable GetDataFromStoredProcedure(string procedureName)
+        {
+            return GetDataFromStoredProcedure(procedureName, null);
+        }

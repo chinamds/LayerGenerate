@@ -1,0 +1,1011 @@
+﻿{$Comment1}
+using System;
+using System.Data.SqlTypes;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Collections.Generic;
+using System.Data;
+using MySql.Data.MySqlClient;
+using MySql.Data.Types;
+
+namespace {26}
+{
+    [Serializable]
+    public abstract partial class {1}
+    {
+        {$Comment}// Loads the connection string from the Universal class{/$Comment}
+        private readonly string ConnectionString = Universal.GetConnectionString();
+
+{2}
+{22}
+        {$Comment}// isDirty flag determines whether data has been changed.{/$Comment}
+        private bool _isDirty;
+        private readonly string _connectionString;
+        {$Comment}// isUpdate flag determines whether we need to do an update or an insert when saving.{/$Comment}
+        protected bool _isUpdate;
+        {$Comment}// isReadOnly determines if the row is in a read only state. This happens when partial{/$Comment}
+        {$Comment}// fields are loaded.{/$Comment}
+        private bool _isReadOnly;
+        {/*}{$Comment}// concurrencyArray holds a serialized version of a database row to make concurrency work.{/$Comment}
+        private byte[] _concurrencyArray;
+        private readonly {27}.{1}.ConcurrencyOptions _concurrency;{*/}
+
+        private readonly bool _layerGenUseStoredProcedures;
+        protected const string LayerGenTableName = "{3}";
+        protected const string LayerGenTableNameDelimited = "`{3}`";
+        {/*}private const string LayerGenFieldNames = "{4}";
+        private const string LayerGenValueNames = "{5}";
+        protected const string LayerGenPrimaryKey = "{6}";{*/}
+
+        {$Comment}// nullDictionary is a dictionary for keeping track of which fields are null values.{/$Comment}
+        private readonly Dictionary<{27}.{1}.Fields, bool> _nullDictionary;
+        {$Comment}// internalNameDictionary is a dictionary for holding the names of the fields, as they are in SQL Server.{/$Comment}
+        private readonly Dictionary<{27}.{1}.Fields, string> _internalNameDictionary;
+{18}
+
+{7}        
+{21}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class.
+        /// </summary>
+        protected {1}()
+        {
+            {$Comment}// By default, use Sql text instead of stored procedures.{/$Comment}
+            _layerGenUseStoredProcedures = false;
+            {/*}{$Comment}// By default, set concurrency to Ignore.{/$Comment}
+            _concurrency = {27}.{1}.ConcurrencyOptions.Ignore;{*/}
+            {$Comment}// Since no row was loaded, this will be an insert and not an update.{/$Comment}
+            _isUpdate = false;
+            {$Comment}// Since no data was modified yet, set the dirty flag to false.{/$Comment}
+            _isDirty = false;
+            {$Comment}// Since all fields were loaded, this is not read only.{/$Comment}
+            _isReadOnly = false;
+            {$Comment}// Set the connection string.{/$Comment}
+            _connectionString = ConnectionString;
+{9}
+{10}
+            {/*}{$Comment}// Store the value of the primary key.{/$Comment}
+            _oldPrimaryKeyValue = {8};{*/}
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, specifying
+        /// if you want to use stored procedures or Sql text commands for data access.
+        /// </summary>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text</param>
+        protected {1}(bool useStoredProcedures)
+        {
+            _layerGenUseStoredProcedures = useStoredProcedures;
+            {/*}{$Comment}// By default, set concurrency to Ignore.{/$Comment}
+            _concurrency = {27}.{1}.ConcurrencyOptions.Ignore;{*/}
+            {$Comment}// Since no row was loaded, this will be an insert and not an update.{/$Comment}
+            _isUpdate = false;
+            {$Comment}// Since no data was modified yet, set the dirty flag to false.{/$Comment}
+            _isDirty = false;
+            {$Comment}// Since all fields were loaded, this is not read only.{/$Comment}
+            _isReadOnly = false;
+            {$Comment}// Set the connection string.{/$Comment}
+            _connectionString = ConnectionString;
+{9}
+{10}
+            {/*}{$Comment}// Store the value of the primary key.{/$Comment}
+            _oldPrimaryKeyValue = {8};{*/}
+        }
+
+{/*}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, loading a
+        /// row from the database that matches the given primary key.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        protected {1}({19} id)
+        {
+            {$Comment}// By default, use Sql text instead of stored procedures.{/$Comment}
+            _layerGenUseStoredProcedures = false;
+            {$Comment}// By default, set concurrency to Ignore.{/$Comment}
+            _concurrency = {27}.{1}.ConcurrencyOptions.Ignore;
+            {$Comment}// Since a row will be loaded, this will be an update and not an insert.{/$Comment}
+            _isUpdate = true;
+            {$Comment}// Since no data was modified yet, set the dirty flag to false.{/$Comment}
+            _isDirty = false;
+            {$Comment}// Since all fields were loaded, this is not read only.{/$Comment}
+            _isReadOnly = false;
+            {$Comment}// Set the connection string.{/$Comment}
+            _connectionString = ConnectionString;
+{9}
+{10}
+            {$Comment}// Load the row matching the given primary key.{/$Comment}
+            Get(id);{*/}
+            {/*}{$Comment}// Store the value of the primary key.{/$Comment}
+            _oldPrimaryKeyValue = {8};{*/}
+        {/*}}{*/}
+
+{/*}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, loading a
+        /// row from the database that matches the given primary key. You can specify
+        /// if you want to do all data access using stored procedures or Sql text.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text</param>
+        protected {1}({19} id, bool useStoredProcedures)
+        {
+            _layerGenUseStoredProcedures = useStoredProcedures;
+            {$Comment}// By default, set concurrency to Ignore.{/$Comment}
+            _concurrency = {27}.{1}.ConcurrencyOptions.Ignore;
+            {$Comment}// Since a row will be loaded, this will be an update and not an insert.{/$Comment}
+            _isUpdate = true;
+            {$Comment}// Since no data was modified yet, set the dirty flag to false.{/$Comment}
+            _isDirty = false;
+            {$Comment}// Since all fields were loaded, this is not read only.{/$Comment}
+            _isReadOnly = false;
+            {$Comment}// Set the connection string.{/$Comment}
+            _connectionString = ConnectionString;
+{9}
+{10}
+            {$Comment}// Load the row matching the given primary key.{/$Comment}
+            Get(id);{*/}
+            {/*}{$Comment}// Store the value of the primary key.{/$Comment}
+            _oldPrimaryKeyValue = {8};{*/}
+        {/*}}{*/}
+
+{/*}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, loading a
+        /// row from the database that matches the given primary key and loading
+        /// only the fields specified.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="fields">The list of <see cref="{27}.{1}.Fields"/> to pull from the database.</param>
+        protected {1}({19} id, List<{27}.{1}.Fields> fields)
+        {
+            {$Comment}// By default, use Sql text instead of stored procedures.{/$Comment}
+            _layerGenUseStoredProcedures = false;
+            {$Comment}// By default, set concurrency to Ignore.{/$Comment}
+            _concurrency = {27}.{1}.ConcurrencyOptions.Ignore;
+            {$Comment}// Since a row will be loaded, this will be an update and not an insert.{/$Comment}
+            _isUpdate = true;
+            {$Comment}// Since no data was modified yet, set the dirty flag to false.{/$Comment}
+            _isDirty = false;
+            {$Comment}// Since this is a partial load, set read only to true.{/$Comment}
+            _isReadOnly = fields != null && fields.Count != 0;
+            {$Comment}// Set the connection string.{/$Comment}
+            _connectionString = ConnectionString;
+{9}
+{10}
+            {$Comment}// Load the row matching the given primary key.{/$Comment}
+            Get(id, fields);
+            {/*}{$Comment}// Store the value of the primary key.{/$Comment}
+            _oldPrimaryKeyValue = {8};{*/}
+        {/*}}{*/}
+
+{/*}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, loading a
+        /// row from the database that matches the given primary key and loading
+        /// only the fields specified.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="fields">The list of <see cref="{27}.{1}.Fields"/> to pull from the database.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text</param>
+        protected {1}({19} id, List<{27}.{1}.Fields> fields, bool useStoredProcedures)
+        {
+            _layerGenUseStoredProcedures = useStoredProcedures;
+            {$Comment}// By default, set concurrency to Ignore.{/$Comment}
+            _concurrency = {27}.{1}.ConcurrencyOptions.Ignore;
+            {$Comment}// Since a row will be loaded, this will be an update and not an insert.{/$Comment}
+            _isUpdate = true;
+            {$Comment}// Since no data was modified yet, set the dirty flag to false.{/$Comment}
+            _isDirty = false;
+            {$Comment}// Since this is a partial load, set read only to true.{/$Comment}
+            _isReadOnly = fields != null && fields.Count != 0;
+            {$Comment}// Set the connection string.{/$Comment}
+            _connectionString = ConnectionString;
+{9}
+{10}
+            {$Comment}// Load the row matching the given primary key.{/$Comment}
+            Get(id, fields);
+            {/*}{$Comment}// Store the value of the primary key.{/$Comment}
+            _oldPrimaryKeyValue = {8};{*/}
+        {/*}}{*/}
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, loading a
+        /// row from the given DataRow.
+        /// </summary>
+        /// <param name="dr">The DataRow that contains the data to be loaded into the instance.</param>
+        protected {1}(DataRow dr)
+        {
+            {$Comment}// By default, use Sql text instead of stored procedures.{/$Comment}
+            _layerGenUseStoredProcedures = false;
+            {/*}{$Comment}// By default, set concurrency to Ignore.{/$Comment}
+            _concurrency = {27}.{1}.ConcurrencyOptions.Ignore;{*/}
+            {$Comment}// Since a row will be loaded, this will be an update and not an insert.{/$Comment}
+            _isUpdate = true;
+            {$Comment}// Since all fields were loaded, this is not read only.{/$Comment}
+            _isReadOnly = false;
+            {$Comment}// Set the connection string.{/$Comment}
+            _connectionString = ConnectionString;
+{9}
+{10}
+            Fill(dr);
+            _isDirty = false;
+            {/*}_oldPrimaryKeyValue = {8};{*/}
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, loading a
+        /// row from the given DataRow.
+        /// </summary>
+        /// <param name="dr">The DataRow that contains the data to be loaded into the instance.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text</param>
+        protected {1}(DataRow dr, bool useStoredProcedures)
+        {
+            _layerGenUseStoredProcedures = useStoredProcedures;
+            {/*}{$Comment}// By default, set concurrency to Ignore.{/$Comment}
+            _concurrency = {27}.{1}.ConcurrencyOptions.Ignore;{*/}
+            {$Comment}// Since a row will be loaded, this will be an update and not an insert.{/$Comment}
+            _isUpdate = true;
+            {$Comment}// Since all fields were loaded, this is not read only.{/$Comment}
+            _isReadOnly = false;
+            {$Comment}// Set the connection string.{/$Comment}
+            _connectionString = ConnectionString;
+{9}
+{10}
+            Fill(dr);
+            _isDirty = false;
+            {/*}_oldPrimaryKeyValue = {8};{*/}
+        }
+
+        {/*}/// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, explicitly enabling
+        /// or disabling the concurrency option.
+        /// </summary>
+        /// <param name="concurrency">A <see cref="{27}.{1}.ConcurrencyOptions"/> value indication the level of concurrency.</param>
+		protected {1}({27}.{1}.ConcurrencyOptions concurrency)
+        {
+            {$Comment}// By default, use Sql text instead of stored procedures.{/$Comment}
+            _layerGenUseStoredProcedures = false;
+            _concurrency = concurrency;
+            _isUpdate = false;
+            _isDirty = false;
+            {$Comment}// Since all fields were loaded, this is not read only.{/$Comment}
+            _isReadOnly = false;
+            {$Comment}// Set the connection string.{/$Comment}
+            _connectionString = ConnectionString;
+{9}
+{10}{*/}
+            {/*}_oldPrimaryKeyValue = {8};{*/}
+       {/*}}{*/}
+
+        {/*}/// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, explicitly enabling
+        /// or disabling the concurrency option.
+        /// </summary>
+        /// <param name="concurrency">A <see cref="{27}.{1}.ConcurrencyOptions"/> value indication the level of concurrency.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text</param>
+		protected {1}({27}.{1}.ConcurrencyOptions concurrency, bool useStoredProcedures)
+        {
+            _layerGenUseStoredProcedures = useStoredProcedures;
+            _concurrency = concurrency;
+            _isUpdate = false;
+            _isDirty = false;
+            {$Comment}// Since all fields were loaded, this is not read only.{/$Comment}
+            _isReadOnly = false;
+            {$Comment}// Set the connection string.{/$Comment}
+            _connectionString = ConnectionString;
+{9}
+{10}{*/}
+            {/*}_oldPrimaryKeyValue = {8};{*/}
+       {/*}}{*/}
+
+{/*}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, loading a
+        /// row from the database that matches the given primary key and explicitly
+        /// enabling or disabling the concurrency option.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="concurrency">A <see cref="{27}.{1}.ConcurrencyOptions"/> value indication the level of concurrency.</param>
+        protected {1}({19} id, {27}.{1}.ConcurrencyOptions concurrency)
+        {
+            {$Comment}// By default, use Sql text instead of stored procedures.{/$Comment}
+            _layerGenUseStoredProcedures = false;
+            _concurrency = concurrency;
+            _isUpdate = true;
+            _isDirty = false;
+            {$Comment}// Since all fields were loaded, this is not read only.{/$Comment}
+            _isReadOnly = false;
+            _connectionString = ConnectionString;
+{9}
+{10}
+            Get(id);{*/}
+            {/*}_oldPrimaryKeyValue = {8};{*/}
+        {/*}}{*/}
+{/*}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, loading a
+        /// row from the database that matches the given primary key and explicitly
+        /// enabling or disabling the concurrency option.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="concurrency">A <see cref="{27}.{1}.ConcurrencyOptions"/> value indication the level of concurrency.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text</param>
+        protected {1}({19} id, {27}.{1}.ConcurrencyOptions concurrency, bool useStoredProcedures)
+        {
+            _layerGenUseStoredProcedures = useStoredProcedures;
+            _concurrency = concurrency;
+            _isUpdate = true;
+            _isDirty = false;
+            {$Comment}// Since all fields were loaded, this is not read only.{/$Comment}
+            _isReadOnly = false;
+            _connectionString = ConnectionString;
+{9}
+{10}
+            Get(id);{*/}
+            {/*}_oldPrimaryKeyValue = {8};{*/}
+        {/*}}{*/}
+{/*}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, loading a
+        /// row from the database that matches the given primary key and loading
+        /// only the fields specified and explicitly enabling or disabling the
+        /// concurrency option.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="fields">The list of <see cref="{27}.{1}.Fields"/> to pull from the database.</param>
+        /// <param name="concurrency">A <see cref="{27}.{1}.ConcurrencyOptions"/> value indication the level of concurrency.</param>
+        protected {1}({19} id, List<{27}.{1}.Fields> fields, {27}.{1}.ConcurrencyOptions concurrency)
+        {
+            {$Comment}// By default, use Sql text instead of stored procedures.{/$Comment}
+            _layerGenUseStoredProcedures = false;
+            _concurrency = concurrency;
+            _isUpdate = true;
+            _isDirty = false;
+            {$Comment}// Since this is a partial load, set read only to true.{/$Comment}
+            _isReadOnly = fields != null && fields.Count != 0;
+            _connectionString = ConnectionString;
+{9}
+{10}
+            Get(id, fields);
+            {/*}_oldPrimaryKeyValue = {8};{*/}
+        {/*}}{*/}
+{/*}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, loading a
+        /// row from the database that matches the given primary key and loading
+        /// only the fields specified and explicitly enabling or disabling the
+        /// concurrency option.
+        /// </summary>
+        /// <param name="id">The primary key of the row that gets loaded from the database.</param>
+        /// <param name="fields">The list of <see cref="{27}.{1}.Fields"/> to pull from the database.</param>
+        /// <param name="concurrency">A <see cref="{27}.{1}.ConcurrencyOptions"/> value indication the level of concurrency.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text</param>
+        protected {1}({19} id, List<{27}.{1}.Fields> fields, {27}.{1}.ConcurrencyOptions concurrency, bool useStoredProcedures)
+        {
+            _layerGenUseStoredProcedures = useStoredProcedures;
+            _concurrency = concurrency;
+            _isUpdate = true;
+            _isDirty = false;
+            {$Comment}// Since this is a partial load, set read only to true.{/$Comment}
+            _isReadOnly = fields != null && fields.Count != 0;
+            _connectionString = ConnectionString;
+{9}
+{10}
+            Get(id, fields);
+            {/*}_oldPrimaryKeyValue = {8};{*/}
+        {/*}}{*/}
+
+{/*}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, loading a
+        /// row from the given DataRow and explicitly enabling or disabling the
+        /// concurrency option.
+        /// </summary>
+        /// <param name="dr">The DataRow that contains the data to be loaded into the instance.</param>
+        /// <param name="concurrency">A <see cref="{27}.{1}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+        protected {1}(DataRow dr, {27}.{1}.ConcurrencyOptions concurrency)
+        {
+            {$Comment}// By default, use Sql text instead of stored procedures.{/$Comment}
+            _layerGenUseStoredProcedures = false;
+            _concurrency = concurrency;
+            _isUpdate = true;
+            _isReadOnly = false;
+            {$Comment}// Since all fields were loaded, this is not read only.{/$Comment}
+            _connectionString = ConnectionString;
+{9}
+{10}
+            Fill(dr);
+            _isDirty = false;{*/}
+            {/*}_oldPrimaryKeyValue = {8};{*/}
+        {/*}}{*/}
+
+{/*}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="{1}"/> class, loading a
+        /// row from the given DataRow and explicitly enabling or disabling the
+        /// concurrency option.
+        /// </summary>
+        /// <param name="dr">The DataRow that contains the data to be loaded into the instance.</param>
+        /// <param name="concurrency">A <see cref="{27}.{1}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+        /// <param name="useStoredProcedures">If true, then all data access will be done using stored procedures. Otherwise, data access will be done using Sql text</param>
+        protected {1}(DataRow dr, {27}.{1}.ConcurrencyOptions concurrency, bool useStoredProcedures)
+        {
+            _layerGenUseStoredProcedures = useStoredProcedures;
+            _concurrency = concurrency;
+            _isUpdate = true;
+            _isReadOnly = false;
+            {$Comment}// Since all fields were loaded, this is not read only.{/$Comment}
+            _connectionString = ConnectionString;
+{9}
+{10}
+            Fill(dr);
+            _isDirty = false;{*/}
+            {/*}_oldPrimaryKeyValue = {8};{*/}
+        {/*}}{*/}
+
+        /// <summary>
+        /// Reads a DataRow and populates the properties from the DataRow.
+        /// </summary>
+        /// <param name="dr">The DataRow that contains the data to be loaded into the properties.</param>
+        protected void Fill(DataRow dr)
+        {
+{11}
+            {/*}if (_concurrency != {27}.{1}.ConcurrencyOptions.Ignore)
+            {
+                _concurrencyArray = GetSerializedObject(this);
+            }{*/}
+        }
+
+        /// <summary>
+        /// Determines if the given field exists in the SqlDataReader.
+        /// </summary>
+        /// <param name="fieldName">The name of the field to search for.</param>
+        /// <param name="reader">The SqlDataReader to search in.</param>
+        /// <returns>Returns true if the field exists in the SqlDataReader, otherwise, returns false.</returns>
+        protected bool HasField(string fieldName, MySqlDataReader reader)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                if (reader.GetName(i) == fieldName)
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Determines if the given field exists in the DataRow.
+        /// </summary>
+        /// <param name="fieldName">The name of the field to search for.</param>
+        /// <param name="row">The DataRow to search in.</param>
+        /// <returns>Returns true if the field exists in the DataRow, otherwise, returns false.</returns>
+        protected bool HasField(string fieldName, DataRow row)
+        {
+            return row.Table.Columns.Contains(fieldName);
+        }
+
+        {/*}/// <summary>
+        /// Retrieves the specified fields from the row with the matching
+        /// primary key from the database and stores them in the properties.
+        /// </summary>
+        /// <param name="id">The primary key of the row to pull.</param>
+        /// <param name="fields">The fields to pull from the database.</param>
+        protected void Get({19} id, List<{27}.{1}.Fields> fields)
+        {
+            string strFields = "`" + LayerGenPrimaryKey + "`,";
+
+            {$Comment}// If there are no fields, then pull all fields{/$Comment}
+            if (fields == null || fields.Count == 0)
+            {
+                strFields = "*";
+            }
+            else
+            {
+                foreach (var field in fields)
+                {
+                    strFields = strFields + "`" + _internalNameDictionary[field] + "`,";
+                }
+                strFields = strFields.TrimEnd(',');
+            }
+
+{20}
+
+            using (var connection = new MySqlConnection(_connectionString))
+            {
+                using (var command = new MySqlCommand())
+                {
+                    connection.Open();
+                    command.CommandType = _layerGenUseStoredProcedures ? CommandType.StoredProcedure : CommandType.Text;
+                    command.CommandText = _layerGenUseStoredProcedures ? ("sp{1}_Select").Replace("@", "") : sql;
+                    command.Connection = connection;
+                    if (_layerGenUseStoredProcedures)
+                    {
+                        command.Parameters.AddWithValue("@id", id);
+                        command.Parameters.AddWithValue("@fields", strFields);
+                    }
+                    else
+                    {
+{28}
+                    }
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (!reader.HasRows)
+                            throw new {27}.RowNotFoundException(LayerGenTableName + ": Could not find row with id of " + id);
+
+                        while (reader.Read())
+                        {
+{12}
+                        }
+                        if (_concurrency != {27}.{1}.ConcurrencyOptions.Ignore)
+                        {
+                            _concurrencyArray = GetSerializedObject(this);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retrieves the row with the matching primary key from the
+        /// database and stores them in the properties.
+        /// </summary>
+        /// <param name="id">The primary key of the row to pull.</param>
+        private void Get({19} id)
+        {
+            Get(id, null);
+        }{*/}
+
+        /// <summary>
+        /// Unsets the value of the given field to null.
+        /// </summary>
+        /// <param name="field">The field to unset as null.</param>
+        private void UnsetNull({27}.{1}.Fields field)
+        {
+            _nullDictionary[field] = false;
+        }
+
+        /// <summary>
+        /// Sets the value of the given field to null.
+        /// </summary>
+        /// <param name="field">The field to set as null.</param>
+        public void SetNull({27}.{1}.Fields field)
+        {
+            _isDirty = true;
+            _nullDictionary[field] = true;
+        }
+
+        /// <summary>
+        /// Determines if the given field is null or if it contains a value.
+        /// </summary>
+        /// <param name="field">The field to test for a null value.</param>
+        /// <returns>True, if the field is null, otherwise, false.</returns>
+        public bool IsNull({27}.{1}.Fields field)
+        {
+            return _nullDictionary[field];
+        }
+
+        /// <summary>
+        /// Resets all properties to their default (null) value.
+        /// </summary>
+        private void ResetToDefault()
+        {
+{13}
+            {/*}_oldPrimaryKeyValue = {8};{*/}
+        }
+{/*}
+        /// <summary>
+        /// Deletes this row from the database.
+        /// </summary>
+        public void Delete()
+        {
+            if (!_layerGenUseStoredProcedures)
+            {
+                string cmdString = "DELETE FROM `" + LayerGenTableName + "` WHERE `" + LayerGenPrimaryKey + "`={88}
+
+                using (var connection = new MySqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    using (var command = new MySqlCommand())
+                    {
+                        command.Connection = connection;
+                        command.CommandType = CommandType.Text;
+                        command.CommandText = cmdString;
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }
+            else
+            {
+                using (var connection = new MySqlConnection(_connectionString))
+                {
+                    connection.Open();
+                    using (var command = new MySqlCommand())
+                    {
+                        command.Connection = connection;
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.CommandText = ("sp{1}_Delete").Replace("@", "");
+                        command.Parameters.AddWithValue("@val1", {8});
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+            }           
+            ResetToDefault();
+            _isDirty = false;
+            _isUpdate = false;
+        }
+
+        /// <summary>
+        /// Saves this row to the database. It will either do an INSERT or an UPDATE
+        /// depending on whether this is a new row or an existing row.
+        /// </summary>
+        /// <exception cref="{27}.ReadOnlyException">Thrown if only partial fields have loaded. If this is a force save, then this exception will not be thrown.</exception>
+        /// <exception cref="{27}.OutOfSyncException">Thrown if concurrency is set to strict and the row being saved is out of sync with the row in the database.</exception>
+        public void Save()
+        {
+            Save(false);
+        }
+
+        /// <summary>
+        /// Saves this row to the database. It will either do an INSERT or an UPDATE
+        /// depending on whether this is a new row or an existing row. You can specify
+        /// whether or not to force save this row. If only partial fields have been
+        /// loaded, force saving will force the row to save. Keep in mind though that
+        /// the fields that are not loaded will be overwritten with a null value.
+        /// </summary>
+        /// <param name="forceSave">True, if you want to force save the row.</param>
+        /// <exception cref="{27}.ReadOnlyException">Thrown if only partial fields have loaded. If this is a force save, then this exception will not be thrown.</exception>
+        /// <exception cref="{27}.OutOfSyncException">Thrown if concurrency is set to strict and the row being saved is out of sync with the row in the database.</exception>
+        public void Save(bool forceSave)
+        {
+            if (!_isDirty)
+            {
+                return;
+            }
+
+            if (_isReadOnly && forceSave == false)
+            {
+                throw new {27}.ReadOnlyException(LayerGenTableName + " is in a read-only state because only partial fields have been loaded!");
+            }
+
+            if (!_isUpdate)
+            {
+                if (!_layerGenUseStoredProcedures)
+                {
+                    const string cmdString =
+                        "INSERT INTO `" + LayerGenTableName + "` (" + LayerGenFieldNames + ") VALUES (" + LayerGenValueNames +
+                        "); SELECT LAST_INSERT_ID();";
+
+                    using (var connection = new MySqlConnection(_connectionString))
+                    {
+                        using (var command = new MySqlCommand())
+                        {
+                            command.Connection = connection;
+                            command.CommandType = CommandType.Text;
+                            command.CommandText = cmdString;
+{14}
+                            connection.Open();
+                            object obj = command.ExecuteScalar();
+                            
+{15}
+                            _oldPrimaryKeyValue = {8};
+                            _isUpdate = true;
+                            _isDirty = false;
+							if (_concurrency != {27}.{1}.ConcurrencyOptions.Ignore)
+                            {
+                                _concurrencyArray = GetSerializedObject(this);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    using (var connection = new MySqlConnection(_connectionString))
+                    {
+                        using (var command = new MySqlCommand())
+                        {
+                            command.Connection = connection;
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.CommandText = ("sp{1}_Insert").Replace("@", "");
+{14}
+                            connection.Open();
+                            object obj = command.ExecuteScalar();
+                            
+{15}
+                            _oldPrimaryKeyValue = {8};
+                            _isUpdate = true;
+                            _isDirty = false;
+                            if (_concurrency != {27}.{1}.ConcurrencyOptions.Ignore)
+                            {
+                                _concurrencyArray = GetSerializedObject(this);
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                if (!_layerGenUseStoredProcedures)
+                {
+{16}
+                    using (var connection = new MySqlConnection(_connectionString))
+                    {
+                        using (var command = new MySqlCommand())
+                        {
+                            command.Connection = connection;
+                            command.CommandType = CommandType.Text;
+                            command.CommandText = cmdString;
+{14}
+{17}
+                            if (_concurrency != {27}.{1}.ConcurrencyOptions.Ignore)
+                            {
+                                if (!IsDataEqual())
+                                {
+                                    throw new {27}.OutOfSyncException(LayerGenTableName + ": Row is out of sync with database! Changes not written to database!");
+                                }
+                            }
+
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                            _oldPrimaryKeyValue = {8};
+                            _isUpdate = true;
+                            _isDirty = false;
+                            if (_concurrency != {27}.{1}.ConcurrencyOptions.Ignore)
+                            {
+                                _concurrencyArray = GetSerializedObject(this);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    using (var connection = new MySqlConnection(_connectionString))
+                    {
+                        using (var command = new MySqlCommand())
+                        {
+                            command.Connection = connection;
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.CommandText = ("sp{1}_Update").Replace("@", "");
+{14}
+{17}
+                            if (_concurrency != {27}.{1}.ConcurrencyOptions.Ignore)
+                            {
+                                if (!IsDataEqual())
+                                {
+                                    throw new {27}.OutOfSyncException(LayerGenTableName + ": Row is out of sync with database! Changes not written to database!");
+                                }
+                            }
+
+                            connection.Open();
+                            command.ExecuteNonQuery();
+                            _oldPrimaryKeyValue = {8};
+                            _isUpdate = true;
+                            _isDirty = false;
+                            if (_concurrency != {27}.{1}.ConcurrencyOptions.Ignore)
+                            {
+                                _concurrencyArray = GetSerializedObject(this);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+{*/}
+{23}
+        /// <summary>
+        /// Retrieves all rows and all fields from the {1} table.
+        /// </summary>
+        /// <returns>A <see cref="System.Data.DataTable" /> with all the data.</returns>
+        internal static DataTable GetAll(bool useStoredProcedures)
+        {
+            if (!useStoredProcedures)
+            {
+                return GetBySqlStatement("SELECT * FROM `" + LayerGenTableName + "`");
+            }
+
+            using (var connection = new MySqlConnection(Universal.GetConnectionString()))
+            {
+                using (var command = new MySqlCommand())
+                {
+                    connection.Open();
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = ("sp{1}_GetAll").Replace("@", "");
+                    command.Connection = connection;
+
+                    using (var adapter = new MySqlDataAdapter())
+                    {
+                        using (var ds = new DataSet())
+                        {
+                            adapter.SelectCommand = command;
+                            adapter.Fill(ds);
+
+                            if (ds.Tables.Count > 0)
+                            {
+                                return ds.Tables[0];
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Retrieves rows from the {1} table by executing the given stored procedure.
+        /// </summary>
+        /// <param name="procedureName">The name of the stored procedure to execute.</param>
+        /// <param name="procedureParams">A dictionary of parameter/value pairs. This can be null if there are no parameters.</param>
+        /// <returns>A <see cref="System.Data.DataTable" /> with all the data.</returns>
+        internal static DataTable GetByStoredProcedure(string procedureName, Dictionary<string, object> procedureParams)
+        {
+            using (var connection = new MySqlConnection(Universal.GetConnectionString()))
+            {
+                using (var command = new MySqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = procedureName;
+                    if (procedureParams != null && procedureParams.Count > 0)
+                    {
+                        foreach (KeyValuePair<string, object> kvp in procedureParams)
+                        {
+                            command.Parameters.AddWithValue(kvp.Key, kvp.Value);
+                        }
+                    }
+
+                    connection.Open();
+                    using (var adapter = new MySqlDataAdapter())
+                    {
+                        using (var ds = new DataSet())
+                        {
+                            adapter.SelectCommand = command;
+                            adapter.Fill(ds);
+
+                            if (ds.Tables.Count > 0)
+                            {
+                                return ds.Tables[0];
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Retrieves rows from the {1} table, based on the given SQL statement.
+        /// </summary>
+        /// <param name="sql">The SQL statement to execute.</param>
+        /// <param name="sqlParams">Optional <see cref="System.String.Format"/> like parameters</param>
+        /// <returns>A <see cref="System.Data.DataTable" /> with all the data.</returns>
+        internal static DataTable GetBySqlStatement(string sql, params object[] sqlParams)
+        {
+            int paramNdx = 0;
+            int valNdx = 1;
+            var paramValDictionary = new Dictionary<string, string>();
+
+            foreach (object param in sqlParams)
+            {
+                if (param is string)
+                {
+                    sql = sql.Replace("'{" + paramNdx + "}'", "@val" + valNdx);
+                    sql = sql.Replace("{" + paramNdx + "}", "@val" + valNdx);
+                    paramValDictionary.Add("@val" + valNdx, (string)param);
+                    valNdx++;
+                }
+                else
+                {
+                    sql = sql.Replace("{" + paramNdx + "}", param.ToString());
+                }
+                paramNdx++;
+            }
+
+            using (var connection = new MySqlConnection(Universal.GetConnectionString()))
+            {
+                using (var command = new MySqlCommand())
+                {
+                    command.Connection = connection;
+                    command.CommandType = CommandType.Text;
+                    command.CommandText = sql;
+                    foreach (KeyValuePair<string, string> kvp in paramValDictionary)
+                    {
+                        command.Parameters.AddWithValue(kvp.Key, kvp.Value);
+                    }
+
+                    connection.Open();
+                    using (var adapter = new MySqlDataAdapter())
+                    {
+                        using (var ds = new DataSet())
+                        {
+                            adapter.SelectCommand = command;
+                            adapter.Fill(ds);
+
+                            if (ds.Tables.Count > 0)
+                            {
+                                return ds.Tables[0];
+                            }
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+{/*}
+        private byte[] GetSerializedObject({1} cls)
+        {
+{24}
+        }
+
+        /// <summary>
+        /// Determines of the current concurrency array is equal to what's in the database.
+        /// </summary>
+        /// <returns>True, if the data in memory is equal to whats in the database, otherwise false.</returns>
+        protected bool IsDataEqual()
+        {
+            var obj = new {27}.{1}({25});
+            byte[] myArray = _concurrencyArray;
+            byte[] clsArray = GetSerializedObject(obj);
+
+            if (myArray.Length != clsArray.Length)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < myArray.Length; i++)
+            {
+                if (myArray[i] != clsArray[i])
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private byte[] ObjectToByteArray(object obj)
+        {
+            if (obj == null)
+                return new byte[] {};
+
+            if (obj is MySqlGeometry)
+            {
+                var obj2 = (MySqlGeometry) obj;
+                var sg = new SimpleGeometry
+                {
+                    X = obj2.XCoordinate,
+                    Y = obj2.YCoordinate,
+                    Srid = obj2.SRID,
+                    Value = obj2.Value
+                };
+                obj = sg;
+            }
+
+            var bf = new BinaryFormatter();
+            using (var ms = new MemoryStream())
+            {
+                bf.Serialize(ms, obj);
+                return ms.ToArray();
+            }
+        }
+
+        [Serializable]
+        private class SimpleGeometry
+        {
+            public double? X { get; set; }
+            public double? Y { get; set; }
+            public byte[] Value { get; set; }
+            public int? Srid { get; set; }
+        }
+{*/}
+{33}
+{34}
+{32}
+    }
+}
+
+
+

@@ -1,0 +1,12 @@
+﻿{$Comment1}
+private static void Insert{1}s({13} ctx)
+{
+	var {8}s = new[]
+					{
+{14}
+					};
+
+	ctx.{1}s.AddOrUpdate(a => a.{9}, {8}s);
+
+	SaveChanges(ctx);
+}

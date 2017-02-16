@@ -1,0 +1,82 @@
+﻿{$Comment1}
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Globalization;
+using {101}.Interfaces;
+using {101}.Properties;
+using {100};
+using {102}.CustomExceptions;
+
+namespace {26}
+{
+    public static partial class {1}DDX
+    {
+     
+        public static I{1} To{1}({1}Data {8}Data)
+        {
+			I{1} {8} = new {1}Obj();
+{2}
+			return {8};
+        }
+
+		public static {1}Data To{1}Data(I{1} {8})
+        {
+			{1}Data {8}Data = new {1}Data();
+{3}
+			return {8}Data;
+        }
+
+		public static I{1} To{1}({1}Dto {8}Dto)
+        {
+			I{1} {8} = new {1}Obj();
+{4}
+			return {8};
+        }
+
+		public static {1}Dto To{1}Dto(I{1} {8})
+        {
+			{1}Dto {8}Dto = new {1}Dto();
+{5}
+			return {8}Dto;
+        }
+
+		public static {1}Data To{1}Data({1}Dto {8}Dto)
+        {
+			{1}Data {8}Data = new {1}Data();
+{6}
+			return {8}Data;
+        }
+
+		public static {1}Dto To{1}Dto({1}Data {8}Data)
+        {
+			{1}Dto {8}Dto = new {1}Dto();
+			CopyTo{1}Dto({8}Data, ref {8}Dto);
+
+			return {8}Dto;
+        }
+
+		public static void CopyTo{1}Dto({1}Data {8}Data, ref {1}Dto {8}Dto)
+        {
+{7}
+        }
+
+		public static bool HasModified({1}Data Original, {1}Data Present)
+        {
+{11}
+
+			return false;
+        }
+
+		public static DataTable ToDataTable()
+		{
+			using ({1}Repository Repo = new {1}Repository())
+			{
+			    return Repo.GetAll().Select({10} => new {
+{9}
+			        }).ConvertToDataTable();
+			}
+		}
+	}
+}

@@ -1,0 +1,525 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{20B86E14-9236-40C7-9E7C-B0C83BA14A33}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LayerGen</RootNamespace>
+    <AssemblyName>LayerGen</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Layergen3x.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>LayerGen.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ADODB, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>ThirdParty\ADODB.dll</HintPath>
+    </Reference>
+    <Reference Include="FirebirdSql.Data.FirebirdClient">
+      <HintPath>ThirdParty\FirebirdSql.Data.FirebirdClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>ThirdParty\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DatabasePlugins\Advantage\ClassFactory.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Column.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Columns.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Database.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Databases.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Domain.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Domains.cs" />
+    <Compile Include="DatabasePlugins\Advantage\ForeignKey.cs" />
+    <Compile Include="DatabasePlugins\Advantage\ForeignKeys.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Index.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Indexes.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Parameter.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Parameters.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Procedure.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Procedures.cs" />
+    <Compile Include="DatabasePlugins\Advantage\ResultColumn.cs" />
+    <Compile Include="DatabasePlugins\Advantage\ResultColumns.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Table.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Tables.cs" />
+    <Compile Include="DatabasePlugins\Advantage\View.cs" />
+    <Compile Include="DatabasePlugins\Advantage\Views.cs" />
+    <Compile Include="DatabasePlugins\Collection.cs" />
+    <Compile Include="DatabasePlugins\CollectionEnumerator.cs" />
+    <Compile Include="DatabasePlugins\Column.cs" />
+    <Compile Include="DatabasePlugins\Columns.cs" />
+    <Compile Include="DatabasePlugins\Common.cs" />
+    <Compile Include="DatabasePlugins\Database.cs" />
+    <Compile Include="DatabasePlugins\Databases.cs" />
+    <Compile Include="DatabasePlugins\DB2\ClassFactory.cs" />
+    <Compile Include="DatabasePlugins\DB2\Column.cs" />
+    <Compile Include="DatabasePlugins\DB2\Columns.cs" />
+    <Compile Include="DatabasePlugins\DB2\Database.cs" />
+    <Compile Include="DatabasePlugins\DB2\Databases.cs" />
+    <Compile Include="DatabasePlugins\DB2\Domain.cs" />
+    <Compile Include="DatabasePlugins\DB2\Domains.cs" />
+    <Compile Include="DatabasePlugins\DB2\ForeignKey.cs" />
+    <Compile Include="DatabasePlugins\DB2\ForeignKeys.cs" />
+    <Compile Include="DatabasePlugins\DB2\Index.cs" />
+    <Compile Include="DatabasePlugins\DB2\Indexes.cs" />
+    <Compile Include="DatabasePlugins\DB2\Parameter.cs" />
+    <Compile Include="DatabasePlugins\DB2\Parameters.cs" />
+    <Compile Include="DatabasePlugins\DB2\Procedure.cs" />
+    <Compile Include="DatabasePlugins\DB2\Procedures.cs" />
+    <Compile Include="DatabasePlugins\DB2\ResultColumn.cs" />
+    <Compile Include="DatabasePlugins\DB2\ResultColumns.cs" />
+    <Compile Include="DatabasePlugins\DB2\Table.cs" />
+    <Compile Include="DatabasePlugins\DB2\Tables.cs" />
+    <Compile Include="DatabasePlugins\DB2\View.cs" />
+    <Compile Include="DatabasePlugins\DB2\Views.cs" />
+    <Compile Include="DatabasePlugins\dbRoot.cs" />
+    <Compile Include="DatabasePlugins\Domain.cs" />
+    <Compile Include="DatabasePlugins\Domains.cs" />
+    <Compile Include="DatabasePlugins\Enumerator.cs" />
+    <Compile Include="DatabasePlugins\FileDbDriver.cs" />
+    <Compile Include="DatabasePlugins\Firebird\ClassFactory.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Column.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Columns.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Database.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Databases.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Domain.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Domains.cs" />
+    <Compile Include="DatabasePlugins\Firebird\ForeignKey.cs" />
+    <Compile Include="DatabasePlugins\Firebird\ForeignKeys.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Index.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Indexes.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Parameter.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Parameters.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Procedure.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Procedures.cs" />
+    <Compile Include="DatabasePlugins\Firebird\ResultColumn.cs" />
+    <Compile Include="DatabasePlugins\Firebird\ResultColumns.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Table.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Tables.cs" />
+    <Compile Include="DatabasePlugins\Firebird\View.cs" />
+    <Compile Include="DatabasePlugins\Firebird\Views.cs" />
+    <Compile Include="DatabasePlugins\ForeignKey.cs" />
+    <Compile Include="DatabasePlugins\ForeignKeys.cs" />
+    <Compile Include="DatabasePlugins\IDatabasePlugin.cs" />
+    <Compile Include="DatabasePlugins\IMyMetaPlugin.cs" />
+    <Compile Include="DatabasePlugins\IMyMetaPluginContext.cs" />
+    <Compile Include="DatabasePlugins\IMyMetaPluginExt.cs" />
+    <Compile Include="DatabasePlugins\Index.cs" />
+    <Compile Include="DatabasePlugins\Indexes.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IClassFactory.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IColumn.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IColumns.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IDatabase.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IDatabases.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IDomain.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IDomains.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IForeignKey.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IForeignKeys.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IIndex.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IIndexes.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\INameValueItem.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IParameter.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IParameters.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IProcedure.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IProcedures.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IProperty.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IPropertyCollection.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IProviderType.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IProviderTypes.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IResultColumn.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IResultColumns.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\ITable.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\ITables.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\ITabularEntity.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IView.cs" />
+    <Compile Include="DatabasePlugins\Interfaces\IViews.cs" />
+    <Compile Include="DatabasePlugins\InternalDriver.cs" />
+    <Compile Include="DatabasePlugins\ISeries\ClassFactory.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Column.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Columns.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Database.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Databases.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Domain.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Domains.cs" />
+    <Compile Include="DatabasePlugins\ISeries\ForeignKey.cs" />
+    <Compile Include="DatabasePlugins\ISeries\ForeignKeys.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Index.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Indexes.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Parameter.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Parameters.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Procedure.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Procedures.cs" />
+    <Compile Include="DatabasePlugins\ISeries\ResultColumn.cs" />
+    <Compile Include="DatabasePlugins\ISeries\ResultColumns.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Table.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Tables.cs" />
+    <Compile Include="DatabasePlugins\ISeries\View.cs" />
+    <Compile Include="DatabasePlugins\ISeries\Views.cs" />
+    <Compile Include="DatabasePlugins\KeyValueCollection.cs" />
+    <Compile Include="DatabasePlugins\MetaObject.cs" />
+    <Compile Include="DatabasePlugins\MyMetaPluginContext.cs" />
+    <Compile Include="DatabasePlugins\MySql.cs" />
+    <Compile Include="DatabasePlugins\MySql5\ClassFactory.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Column.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Columns.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Database.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Databases.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Domain.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Domains.cs" />
+    <Compile Include="DatabasePlugins\MySql5\ForeignKey.cs" />
+    <Compile Include="DatabasePlugins\MySql5\ForeignKeys.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Index.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Indexes.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Parameter.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Parameters.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Procedure.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Procedures.cs" />
+    <Compile Include="DatabasePlugins\MySql5\ResultColumn.cs" />
+    <Compile Include="DatabasePlugins\MySql5\ResultColumns.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Table.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Tables.cs" />
+    <Compile Include="DatabasePlugins\MySql5\View.cs" />
+    <Compile Include="DatabasePlugins\MySql5\Views.cs" />
+    <Compile Include="DatabasePlugins\Oracle\ClassFactory.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Column.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Columns.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Database.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Databases.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Domain.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Domains.cs" />
+    <Compile Include="DatabasePlugins\Oracle\ForeignKey.cs" />
+    <Compile Include="DatabasePlugins\Oracle\ForeignKeys.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Index.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Indexes.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Parameter.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Parameters.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Procedure.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Procedures.cs" />
+    <Compile Include="DatabasePlugins\Oracle\ResultColumn.cs" />
+    <Compile Include="DatabasePlugins\Oracle\ResultColumns.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Table.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Tables.cs" />
+    <Compile Include="DatabasePlugins\Oracle\View.cs" />
+    <Compile Include="DatabasePlugins\Oracle\Views.cs" />
+    <Compile Include="DatabasePlugins\Parameter.cs" />
+    <Compile Include="DatabasePlugins\Parameters.cs" />
+    <Compile Include="DatabasePlugins\PluginDriver.cs" />
+    <Compile Include="DatabasePlugins\Plugin\ClassFactory.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Column.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Columns.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Database.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Databases.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Domain.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Domains.cs" />
+    <Compile Include="DatabasePlugins\Plugin\ForeignKey.cs" />
+    <Compile Include="DatabasePlugins\Plugin\ForeignKeys.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Index.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Indexes.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Parameter.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Parameters.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Procedure.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Procedures.cs" />
+    <Compile Include="DatabasePlugins\Plugin\ResultColumn.cs" />
+    <Compile Include="DatabasePlugins\Plugin\ResultColumns.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Table.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Tables.cs" />
+    <Compile Include="DatabasePlugins\Plugin\View.cs" />
+    <Compile Include="DatabasePlugins\Plugin\Views.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\ClassFactory.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Column.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Columns.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\ConnectionHelper.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Database.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Databases.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Domain.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Domains.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\ForeignKey.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\ForeignKeys.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Index.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Indexes.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Parameter.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Parameters.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Procedure.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Procedures.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\ResultColumn.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\ResultColumns.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Table.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Tables.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\View.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL8\Views.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\ClassFactory.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Column.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Columns.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\ConnectionHelper.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Database.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Databases.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Domain.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Domains.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\ForeignKey.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\ForeignKeys.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Index.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Indexes.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Parameter.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Parameters.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Procedure.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Procedures.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\ResultColumn.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\ResultColumns.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Table.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Tables.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\View.cs" />
+    <Compile Include="DatabasePlugins\PostgreSQL\Views.cs" />
+    <Compile Include="DatabasePlugins\Procedure.cs" />
+    <Compile Include="DatabasePlugins\Procedures.cs" />
+    <Compile Include="DatabasePlugins\Property.cs" />
+    <Compile Include="DatabasePlugins\PropertyCollection.cs" />
+    <Compile Include="DatabasePlugins\PropertyCollectionAll.cs" />
+    <Compile Include="DatabasePlugins\ProviderType.cs" />
+    <Compile Include="DatabasePlugins\ProviderTypes.cs" />
+    <Compile Include="DatabasePlugins\ResultColumn.cs" />
+    <Compile Include="DatabasePlugins\ResultColumns.cs" />
+    <Compile Include="DatabasePlugins\Single.cs" />
+    <Compile Include="DatabasePlugins\Sqlite.cs" />
+    <Compile Include="DatabasePlugins\SQLite\ClassFactory.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Column.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Columns.cs" />
+    <Compile Include="DatabasePlugins\SQLite\ConnectionHelper.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Database.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Databases.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Domain.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Domains.cs" />
+    <Compile Include="DatabasePlugins\SQLite\ForeignKey.cs" />
+    <Compile Include="DatabasePlugins\SQLite\ForeignKeys.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Index.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Indexes.cs" />
+    <Compile Include="DatabasePlugins\SQLite\MetaDataHelper.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Parameter.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Parameters.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Procedure.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Procedures.cs" />
+    <Compile Include="DatabasePlugins\SQLite\ResultColumn.cs" />
+    <Compile Include="DatabasePlugins\SQLite\ResultColumns.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Table.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Tables.cs" />
+    <Compile Include="DatabasePlugins\SQLite\View.cs" />
+    <Compile Include="DatabasePlugins\SQLite\Views.cs" />
+    <Compile Include="DatabasePlugins\SqlServer.cs" />
+    <Compile Include="DatabasePlugins\Sql\ClassFactory.cs" />
+    <Compile Include="DatabasePlugins\Sql\Column.cs" />
+    <Compile Include="DatabasePlugins\Sql\Columns.cs" />
+    <Compile Include="DatabasePlugins\Sql\Database.cs" />
+    <Compile Include="DatabasePlugins\Sql\Databases.cs" />
+    <Compile Include="DatabasePlugins\Sql\DatabaseSpecific.cs" />
+    <Compile Include="DatabasePlugins\Sql\Domain.cs" />
+    <Compile Include="DatabasePlugins\Sql\Domains.cs" />
+    <Compile Include="DatabasePlugins\Sql\ForeignKey.cs" />
+    <Compile Include="DatabasePlugins\Sql\ForeignKeys.cs" />
+    <Compile Include="DatabasePlugins\Sql\Index.cs" />
+    <Compile Include="DatabasePlugins\Sql\Indexes.cs" />
+    <Compile Include="DatabasePlugins\Sql\Parameter.cs" />
+    <Compile Include="DatabasePlugins\Sql\Parameters.cs" />
+    <Compile Include="DatabasePlugins\Sql\Procedure.cs" />
+    <Compile Include="DatabasePlugins\Sql\Procedures.cs" />
+    <Compile Include="DatabasePlugins\Sql\ResultColumn.cs" />
+    <Compile Include="DatabasePlugins\Sql\ResultColumns.cs" />
+    <Compile Include="DatabasePlugins\Sql\Table.cs" />
+    <Compile Include="DatabasePlugins\Sql\Tables.cs" />
+    <Compile Include="DatabasePlugins\Sql\View.cs" />
+    <Compile Include="DatabasePlugins\Sql\Views.cs" />
+    <Compile Include="DatabasePlugins\Table.cs" />
+    <Compile Include="DatabasePlugins\Tables.cs" />
+    <Compile Include="DatabasePlugins\Utility.cs" />
+    <Compile Include="DatabasePlugins\View.cs" />
+    <Compile Include="DatabasePlugins\Views.cs" />
+    <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="LgObject.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NativeMethods.cs" />
+    <Compile Include="ObjectExplorer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ObjectExplorer.Designer.cs">
+      <DependentUpon>ObjectExplorer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ObjectExplorerMySql.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ObjectExplorerMySql.Designer.cs">
+      <DependentUpon>ObjectExplorerMySql.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ObjectExplorerSqlite.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ObjectExplorerSqlite.Designer.cs">
+      <DependentUpon>ObjectExplorerSqlite.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PleaseWaitForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PleaseWaitForm.Designer.cs">
+      <DependentUpon>PleaseWaitForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RegistryFunctions.cs" />
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ObjectExplorer.resx">
+      <DependentUpon>ObjectExplorer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ObjectExplorerMySql.resx">
+      <DependentUpon>ObjectExplorerMySql.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ObjectExplorerSqlite.resx">
+      <DependentUpon>ObjectExplorerSqlite.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PleaseWaitForm.resx">
+      <DependentUpon>PleaseWaitForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="LayerGen.snk" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AprilTile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Layergen3x.ico" />
+    <EmbeddedResource Include="Templates\DataLayer\JsonDateSerializer.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SqlServerScript.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SqlServerJavaEntity.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpController.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpDto.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpInit.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpRepo.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpIC.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpCollection.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpI.txt" />
+    <EmbeddedResource Include="Templates\Universal1SqliteVb.txt" />
+    <EmbeddedResource Include="Templates\Universal2SqliteVb.txt" />
+    <EmbeddedResource Include="Templates\Universal1MySqlVb.txt" />
+    <EmbeddedResource Include="Templates\Universal2MySqlVb.txt" />
+    <EmbeddedResource Include="Templates\Universal2SqlServerVb.txt" />
+    <EmbeddedResource Include="Templates\Universal1SqlServerVb.txt" />
+    <EmbeddedResource Include="Templates\Universal1MySqlCs.txt" />
+    <EmbeddedResource Include="Templates\Universal2MySqlCs.txt" />
+    <EmbeddedResource Include="Templates\Universal1SqliteCs.txt" />
+    <EmbeddedResource Include="Templates\Universal2SqliteCs.txt" />
+    <EmbeddedResource Include="Templates\Universal2SqlServerCs.txt" />
+    <EmbeddedResource Include="Templates\Universal1SqlServerCs.txt" />
+    <None Include="Resources\Help-icon1.png" />
+    <EmbeddedResource Include="Templates\BusinessLayer\MySqlVbNet.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\MySqlVbNet.txt" />
+    <EmbeddedResource Include="Templates\BusinessLayer\MySqlCSharp.txt" />
+    <EmbeddedResource Include="Templates\BusinessLayer\SQLiteVbNet.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SQLiteVbNet.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\MySqlCSharp.txt" />
+    <EmbeddedResource Include="Templates\BusinessLayer\SQLiteCSharp.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SQLiteCSharp.txt" />
+    <EmbeddedResource Include="Templates\BusinessLayer\SqlServerVbNet.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SqlServerVbNet.txt" />
+    <EmbeddedResource Include="Templates\BusinessLayer\SqlServerCSharp.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharp.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MySql.Data\MySql.Data.csproj">
+      <Project>{5ac10beb-25b3-48d7-a846-5ff901f2cea2}</Project>
+      <Name>MySql.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\System.Data.SQLite\System.Data.SQLite.csproj">
+      <Project>{56e546b0-080d-4dee-9997-52ac89da45cb}</Project>
+      <Name>System.Data.SQLite</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

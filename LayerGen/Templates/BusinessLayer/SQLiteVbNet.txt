@@ -1,0 +1,194 @@
+﻿{$Comment1}
+
+Option Strict On
+Option Explicit On
+Option Infer Off
+
+Imports System.Collections.Generic
+Imports System.Data
+
+Namespace {27}
+	<Serializable> _
+	Public Partial Class {0}
+		Inherits {26}.{0}
+
+        {/*}Public Enum ConcurrencyOptions
+            ''' <summary>
+            ''' Concurrency checking is disabled
+            ''' </summary>
+            Ignore = 0
+            ''' <summary>
+            ''' Concurrency checking is checked and an exception is thrown if the data changed
+            ''' </summary>
+            [Strict] = 1
+        End Enum{*/}
+
+        Public Enum Fields
+{3}
+        End Enum
+
+        ''' <summary>
+        ''' Initializes a new instance of the <see cref="{0}"/> class.
+        ''' </summary>
+		Public Sub New()
+			MyBase.New()
+		End Sub
+{/*}
+        ''' <summary>
+        ''' Initializes a new instance of the <see cref="{0}"/> class, loading a
+        ''' row from the database that matches the given primary key.
+        ''' </summary>
+        ''' <param name="id">The primary key of the row that gets loaded from the database.</param>
+		Public Sub New(id As {1})
+			MyBase.New(id)
+		End Sub
+
+        ''' <summary>
+        ''' Initializes a new instance of the <see cref="{0}"/> class, loading a
+        ''' row from the database that matches the given primary key and loading
+        ''' only the fields specified.
+        ''' </summary>
+        ''' <param name="id">The primary key of the row that gets loaded from the database.</param>
+        ''' <param name="fields">The list of <see cref="{27}.{0}.Fields"/> to pull from the database.</param>
+		Public Sub New(id As {1}, fields As List(Of Fields))
+			MyBase.New(id, fields)
+		End Sub
+{*/}
+        ''' <summary>
+        ''' Initializes a new instance of the <see cref="{0}"/> class, loading a
+        ''' row from the given DataRow.
+        ''' </summary>
+        ''' <param name="dr">The DataRow that contains the data to be loaded into the instance.</param>
+		Protected Friend Sub New(dr As DataRow)
+			MyBase.New(dr)
+		End Sub
+
+        {/*}''' <summary>
+        ''' Initializes a new instance of the <see cref="{0}"/> class, explicitly enabling
+        ''' or disabling the concurrency option.
+        ''' </summary>
+        ''' <param name="concurrency">A <see cref="{27}.{0}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+		Public Sub New(concurrency As ConcurrencyOptions)
+			MyBase.New(concurrency)
+		End Sub
+
+        ''' <summary>
+        ''' Initializes a new instance of the <see cref="{0}"/> class, loading a
+        ''' row from the database that matches the given primary key and explicitly
+        ''' enabling or disabling the concurrency option.
+        ''' </summary>
+        ''' <param name="id">The primary key of the row that gets loaded from the database.</param>
+        ''' <param name="concurrency">A <see cref="{27}.{0}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+		Public Sub New(id As {1}, concurrency As ConcurrencyOptions)
+			MyBase.New(id, concurrency)
+		End Sub
+
+        ''' <summary>
+        ''' Initializes a new instance of the <see cref="{0}"/> class, loading a
+        ''' row from the database that matches the given primary key and loading
+        ''' only the fields specified and explicitly enabling or disabling the
+        ''' concurrency option.
+        ''' </summary>
+        ''' <param name="id">The primary key of the row that gets loaded from the database.</param>
+        ''' <param name="fields">The list of <see cref="{27}.{0}.Fields"/> to pull from the database.</param>
+        ''' <param name="concurrency">A <see cref="{27}.{0}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+		Public Sub New(id As {1}, fields As List(Of Fields), concurrency As ConcurrencyOptions)
+			MyBase.New(id, fields, concurrency)
+		End Sub
+
+        ''' <summary>
+        ''' Initializes a new instance of the <see cref="{0}"/> class, loading a
+        ''' row from the given DataRow and explicitly enabling or disabling the
+        ''' concurrency option.
+        ''' </summary>
+        ''' <param name="dr">The DataRow that contains the data to be loaded into the instance.</param>
+        ''' <param name="concurrency">A <see cref="{27}.{0}.ConcurrencyOptions"/> value indicating the level of concurrency.</param>
+		Protected Friend Sub New(dr As DataRow, concurrency As ConcurrencyOptions)
+			MyBase.New(dr, concurrency)
+		End Sub{*/}
+
+        ''' <summary>
+        ''' The name of the table
+        ''' </summary>
+        Public Shared ReadOnly Property LgTableName() As String
+            Get
+                Return LayerGenTableName
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' The name of table, delimited with brackets
+        ''' e.g. "[{99}]" instead of "{99}"
+        ''' </summary>
+        Public Shared ReadOnly Property LgTableNameDelimited() As String
+            Get
+                Return LayerGenTableNameDelimited
+            End Get
+        End Property
+
+        Protected Friend Function IsUpdate() As Boolean
+            Return _isUpdate
+        End Function
+
+{/*}
+        ''' <summary>
+        ''' The name of the primary key in the table
+        ''' </summary>
+        Public Shared ReadOnly Property LgPrimaryKeyName() As String
+            Get
+                Return LayerGenPrimaryKey
+            End Get
+        End Property{*/}
+{34}
+	End Class
+
+    ''' <summary>
+    ''' Represents a collection of <see cref="{0}"/> objects.
+    ''' </summary>
+	<Serializable> _
+	Public Class {0}s
+		Inherits List(Of {0})
+		{/*}Private ReadOnly _concurrency As {0}.ConcurrencyOptions
+
+        Public Sub New(concurrency As {0}.ConcurrencyOptions)
+            _concurrency = concurrency
+        End Sub
+		{*/}
+
+        Public Sub New()
+            {/*}_concurrency = {0}.ConcurrencyOptions.Ignore{*/}
+        End Sub
+
+		Protected Sub Load(dataRows As DataRowCollection)
+            Clear()
+			For Each dr As DataRow In dataRows
+				Add(New {0}(dr{/*}, _concurrency{*/}))
+			Next
+		End Sub
+
+{2}
+        ''' <summary>
+        ''' Retrieves rows from the {0} table, based on the given SQL statement.
+        ''' </summary>
+        ''' <param name="sql">The SQL statement to execute.</param>
+        ''' <param name="sqlParams">Optional <see cref="System.String.Format"/> like parameters</param>
+		Public Sub GetBySqlStatement(sql As String, ParamArray sqlParams As Object())
+			Dim dt As DataTable = {26}.{0}.GetBySqlStatement(sql, sqlParams)
+			If dt IsNot Nothing Then
+				Load(dt.Rows)
+			End If
+		End Sub
+
+        ''' <summary>
+        ''' Retrieves all the rows from the {0} table.
+        ''' </summary>
+		Public Sub GetAll()
+			Dim dt As DataTable = {26}.{0}.GetAll()
+			If dt IsNot Nothing Then
+				Load(dt.Rows)
+			End If
+		End Sub
+{33}
+	End Class
+End Namespace
+

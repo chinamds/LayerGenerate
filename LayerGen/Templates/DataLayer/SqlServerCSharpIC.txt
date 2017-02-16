@@ -1,0 +1,87 @@
+﻿{$Comment1}
+using System;
+
+namespace {26}
+{
+	/// <summary>
+	/// A collection of <see cref="I{1}" /> objects.
+	/// </summary>
+	public interface I{1}Collection : System.Collections.Generic.ICollection<I{1}>
+	{
+		/// <summary>
+		/// Sort the objects in this collection based on the <see cref="I{1}.{9}" /> property.
+		/// </summary>
+		void Sort();
+
+		/// <summary>
+		/// Adds the {8}s to the current collection.
+		/// </summary>
+		/// <param name="{8}s">The {8}s to add to the current collection.</param>
+		void AddRange(System.Collections.Generic.IEnumerable<I{1}> {8}s);
+
+		/// <summary>
+		/// Gets a reference to the <see cref="I{1}" /> object at the specified index position.
+		/// </summary>
+		/// <param name="indexPosition">An integer specifying the position of the object within this collection to
+		/// return. Zero returns the first item.</param>
+		/// <returns>Returns a reference to the <see cref="I{1}" /> object at the specified index position.</returns>
+		I{1} this[Int32 indexPosition]
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
+		/// Searches for the specified object and returns the zero-based index of the first occurrence within the collection.  
+		/// </summary>
+		/// <param name="{8}">The {8} to locate in the collection. The value can be a null 
+		/// reference (Nothing in Visual Basic).</param>
+		/// <returns>The zero-based index of the first occurrence of {8} within the collection, if found; 
+		/// otherwise, ?. </returns>
+		Int32 IndexOf(I{1} {8});
+
+		/// <summary>
+		/// Determines whether the <paramref name="item"/> is already a member of the collection. An object is considered a member
+		/// of the collection if they both have the same <see cref="I{1}.{9}" />.
+		/// </summary>
+		/// <param name="item">An <see cref="I{1}"/> to determine whether it is a member of the current collection.</param>
+		/// <returns>Returns <c>true</c> if <paramref name="item"/> is a member of the current collection;
+		/// otherwise returns <c>false</c>.</returns>
+		new bool Contains(I{1} item);
+
+		/// <summary>
+		/// Adds the specified {8}.
+		/// </summary>
+		/// <param name="item">The {8} to add.</param>
+		new void Add(I{1} item);
+
+		/// <summary>
+		/// Find the {8} in the collection that matches the specified <paramref name="{8}Id" />. If no matching object is found,
+		/// null is returned.
+		/// </summary>
+		/// <param name="{8}Id">The ID that uniquely identifies the {8}.</param>
+		/// <returns>Returns an <see cref="I{1}" />object from the collection that matches the specified <paramref name="{8}Id" />,
+		/// or null if no matching object is found.</returns>
+		I{1} FindById({12} {8}Id);
+
+		/// <summary>
+		/// Creates a new, empty instance of an <see cref="I{1}" /> object. This method can be used by code that only has a 
+		/// reference to the interface layer and therefore cannot create a new instance of an object on its own.
+		/// </summary>
+		/// <returns>Returns a new, empty instance of an <see cref="I{1}" /> object.</returns>
+		I{1} CreateEmpty{1}Instance();
+
+		/// <summary>
+		/// Creates a new, empty instance of an <see cref="I{1}Collection" /> object. This method can be used by code that only has a 
+		/// reference to the interface layer and therefore cannot create a new instance of an object on its own.
+		/// </summary>
+		/// <returns>Returns a new, empty instance of an <see cref="I{1}Collection" /> object.</returns>
+		I{1}Collection CreateEmpty{1}Collection();
+
+		/// <summary>
+		/// Creates a new collection containing deep copies of the items it contains.
+		/// </summary>
+		/// <returns>Returns a new collection containing deep copies of the items it contains.</returns>
+		I{1}Collection Copy();
+	}
+}
