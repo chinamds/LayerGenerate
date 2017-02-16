@@ -3,7 +3,7 @@
 Automatically generate Business and Data layers in C# or VB.Net from a SQL Server, Microsoft Access, MySql or SQLite database design.
 Download Source Code
 
-This code was [originally published by icemanind](https://www.codeproject.com/Articles/1000660/LayerGen) whose release notes are reproduced below. I change it to entity framework and moved the source to github in order to facilitate ongoing development.
+This code was [originally published by icemanind](https://www.codeproject.com/Articles/1000660/LayerGen) whose release notes are reproduced below. I change it to support entity framework and add java pojo generate, moved the source to github in order to facilitate ongoing development.
 
 ### Introduction
 
