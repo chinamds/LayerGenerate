@@ -60,6 +60,20 @@ namespace LayerGen
             string dataSuffix = GetRegistryValue("DataSuffix");
             string databaseContext = GetRegistryValue("DatabaseContext");
 
+            string customPackageNames = GetRegistryValue("CustomPackageNames");
+            string modelPackageName = GetRegistryValue("ModelPackageName");
+            string daoPackageName = GetRegistryValue("DaoPackageName");
+            string servicePackageName = GetRegistryValue("ServicePackageName");
+            string controllerPackageName = GetRegistryValue("ControllerPackageName");
+
+            string modelExtends = GetRegistryValue("ModelExtends");
+            string daoExtends = GetRegistryValue("DaoExtends");
+            string serviceExtends = GetRegistryValue("ServiceExtends");
+            string controllerExtends = GetRegistryValue("ControllerExtends");
+
+            string generateTestData = GetRegistryValue("GenerateTestData");
+            string allowJsonSerialization = GetRegistryValue("AllowJsonSerialization");
+
             txtEventLogNamespace.Text = string.IsNullOrEmpty(eventLogNamespaceName) ? "" : eventLogNamespaceName;
             txtBusinessNamespace.Text = string.IsNullOrEmpty(businessNamespaceName) ? "" : businessNamespaceName;
             txtDataNamespace.Text = string.IsNullOrEmpty(dataNamespaceName) ? "" : dataNamespaceName;
@@ -73,6 +87,35 @@ namespace LayerGen
             txtMySqlDatabaseName.Text = string.IsNullOrEmpty(mysqlServerDatabaseName) ? "" : mysqlServerDatabaseName;
             txtMySqlUserName.Text = string.IsNullOrEmpty(mysqlServerUserName) ? "" : mysqlServerUserName;
             txtMySqlPassword.Text = string.IsNullOrEmpty(mysqlServerPassword) ? "" : mysqlServerPassword;
+
+            txtModelPackage.Text = string.IsNullOrEmpty(modelPackageName) ? "" : modelPackageName;
+            txtDaoPackage.Text = string.IsNullOrEmpty(daoPackageName) ? "" : daoPackageName;
+            txtServicePackage.Text = string.IsNullOrEmpty(servicePackageName) ? "" : servicePackageName;
+            txtControllerPackage.Text = string.IsNullOrEmpty(controllerPackageName) ? "" : controllerPackageName;
+
+            txtModelExtends.Text = string.IsNullOrEmpty(modelExtends) ? "" : modelExtends;
+            txtDaoExtends.Text = string.IsNullOrEmpty(daoExtends) ? "" : daoExtends;
+            txtServiceExtends.Text = string.IsNullOrEmpty(serviceExtends) ? "" : serviceExtends;
+            txtControllerExtends.Text = string.IsNullOrEmpty(controllerExtends) ? "" : controllerExtends;
+
+            bool result;
+            chkAllowJsonSerialization.Checked = false;
+            if (bool.TryParse(allowJsonSerialization, out result))
+            {
+                chkAllowJsonSerialization.Checked = result;
+            }
+
+            chkTestData.Checked = false;
+            if (bool.TryParse(generateTestData, out result))
+            {
+                chkTestData.Checked = result;
+            }
+
+            chkCustomPackageNames.Checked = false;
+            if (bool.TryParse(customPackageNames, out result))
+            {
+                chkCustomPackageNames.Checked = result;
+            }
 
             if (string.IsNullOrEmpty(allowSerialization))
             {
@@ -266,6 +309,7 @@ namespace LayerGen
             txtMySqlObjects.MaxLength = int.MaxValue;
 
             RefreshNamespaces();
+            RefreshPackageNames();
             ConfigureSqliteConnectionString();
             ConfigureMySqlConnectionString();
             ConfigureSqlServerConnectionString();
@@ -307,6 +351,20 @@ namespace LayerGen
             RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "CustomComments", txtCustomComments.Text);
             RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "DataSuffixs", txtDataSuffix.Text);
             RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "DatabaseContext", txtDbContext.Text);
+
+            RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "CustomPackageNames", chkCustomPackageNames.Checked.ToString());
+            RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "ModelPackageName", txtModelPackage.Text);
+            RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "DaoPackageName", txtDaoPackage.Text);
+            RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "ServicePackageName", txtServicePackage.Text);
+            RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "ControllerPackageName", txtControllerPackage.Text);
+
+            RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "ModelExtends", txtModelExtends.Text);
+            RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "DaoExtends", txtDaoExtends.Text);
+            RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "ServiceExtends", txtServiceExtends.Text);
+            RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "ControllerExtends", txtControllerExtends.Text);
+
+            RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "GenerateTestData", chkTestData.Checked.ToString());
+            RegistryFunctions.WriteToRegistry(Microsoft.Win32.RegistryHive.CurrentUser, "Software\\Icemanind\\LayerGen", "AllowJsonSerialization", chkAllowJsonSerialization.Checked.ToString());
         }
 
         private void chkSqlTrustedConnection_CheckedChanged(object sender, EventArgs e)
@@ -481,7 +539,17 @@ namespace LayerGen
                     CustomConnectionString = txtSqlServerCustomConnectionString.Text.Replace('\r', ' ').Replace('\n', ' '),
                     HasDynamicDataRetrieval = chkEnableDynamicData.Checked,
                     AllowSerialization = chkAllowSerialization.Checked,
-                    CustomComments  = txtCustomComments.Text
+                    CustomComments  = txtCustomComments.Text,
+                    ModelPackageName = txtModelPackage.Text,
+                    DaoPackageName = txtDaoPackage.Text,
+                    ServicePackageName = txtServicePackage.Text,
+                    ControllerPackageName = txtControllerPackage.Text,
+                    ModelExtends = txtModelExtends.Text,
+                    DaoExtends = txtDaoExtends.Text,
+                    ServiceExtends = txtServiceExtends.Text,
+                    ControllerExtends = txtControllerExtends.Text,
+                    GenerateTestData = chkTestData.Checked,
+                    AllowJsonSerialization = chkAllowJsonSerialization.Checked,
                 };
 
                 if ((string) ddlLanguage.SelectedItem == "VB.NET")
@@ -492,7 +560,7 @@ namespace LayerGen
                 {
                     databasePlugin.Language = DatabasePlugins.Languages.CSharp;
                 }
-                if ((string)ddlLanguage.SelectedItem == "Java appfuse")
+                if ((string)ddlLanguage.SelectedItem == "Java")
                 {
                     databasePlugin.Language = DatabasePlugins.Languages.Java;
                 }
@@ -528,7 +596,7 @@ namespace LayerGen
                 {
                     databasePlugin.Language = DatabasePlugins.Languages.CSharp;
                 }
-                if ((string)ddlLanguage.SelectedItem == "Java appfuse")
+                if ((string)ddlLanguage.SelectedItem == "Java")
                 {
                     databasePlugin.Language = DatabasePlugins.Languages.Java;
                 }
@@ -568,7 +636,7 @@ namespace LayerGen
                 {
                     databasePlugin.Language = DatabasePlugins.Languages.CSharp;
                 }
-                if ((string)ddlLanguage.SelectedItem == "Java appfuse")
+                if ((string)ddlLanguage.SelectedItem == "Java")
                 {
                     databasePlugin.Language = DatabasePlugins.Languages.Java;
                 }
@@ -730,6 +798,98 @@ namespace LayerGen
             }
         }
 
+        private void RefreshPackageNames()
+        {
+            if (chkCustomPackageNames.Checked)
+            {
+                lblModelPackage.ForeColor = Color.White;
+                lblDaoPackage.ForeColor = Color.White;
+                lblServicePackage.ForeColor = Color.White;
+                lblControllerPackage.ForeColor = Color.White;
+                lblModelExtends.ForeColor = Color.White;
+                lblDaoExtends.ForeColor = Color.White;
+                lblServiceExtends.ForeColor = Color.White;
+                lblControllerExtends.ForeColor = Color.White;
+                txtModelPackage.Enabled = true;
+                txtDaoPackage.Enabled = true;
+                txtServicePackage.Enabled = true;
+                txtControllerPackage.Enabled = true;
+                txtModelExtends.Enabled = true;
+                txtDaoExtends.Enabled = true;
+                txtServiceExtends.Enabled = true;
+                txtControllerExtends.Enabled = true;
+                pbHelpModelPackage.Visible = true;
+                pbHelpDaoPackage.Visible = true;
+                pbHelpServicePackage.Visible = true;
+                pbHelpControllerPackage.Visible = true;
+
+                return;
+            }
+            pbHelpModelPackage.Visible = false;
+            pbHelpDaoPackage.Visible = false;
+            pbHelpServicePackage.Visible = false;
+            pbHelpControllerPackage.Visible = false;
+
+            lblModelPackage.ForeColor = Color.FromArgb(165, 165, 165);
+            lblDaoPackage.ForeColor = Color.FromArgb(165, 165, 165);
+            lblServicePackage.ForeColor = Color.FromArgb(165, 165, 165);
+            lblControllerPackage.ForeColor = Color.FromArgb(165, 165, 165);
+            lblModelExtends.ForeColor = Color.FromArgb(165, 165, 165);
+            lblDaoExtends.ForeColor = Color.FromArgb(165, 165, 165);
+            lblServiceExtends.ForeColor = Color.FromArgb(165, 165, 165);
+            lblControllerExtends.ForeColor = Color.FromArgb(165, 165, 165);
+            txtModelPackage.Enabled = false;
+            txtDaoPackage.Enabled = false;
+            txtServicePackage.Enabled = false;
+            txtControllerPackage.Enabled = false;
+            txtModelExtends.Enabled = false;
+            txtDaoExtends.Enabled = false;
+            txtServiceExtends.Enabled = false;
+            txtControllerExtends.Enabled = false;
+
+            string basePackage = txtDatabaseName.Text.ToLowerInvariant();        
+            if (ddlSqlServer.SelectedIndex == 1)
+            {
+                string file;
+                try
+                {
+                    file = Path.GetFileNameWithoutExtension(txtSqliteFileName.Text);
+                }
+                catch
+                {
+                    file = "";
+                }
+                basePackage = file.ToLowerInvariant();
+            }
+            else if (ddlSqlServer.SelectedIndex == 2)
+            {
+                basePackage = txtMySqlDatabaseName.Text.ToLowerInvariant();
+            }
+            txtModelPackage.Text = @"com." + basePackage + ".model";
+            txtDaoPackage.Text = @"com." + basePackage + ".dao";
+            txtServicePackage.Text = @"com." + basePackage + ".service";
+            txtControllerPackage.Text = @"com." + basePackage + ".controller";
+
+            txtModelExtends.Text = @"com." + basePackage + ".model.BaseObject";
+            txtDaoExtends.Text = @"com." + basePackage + ".dao.GenericDao";
+            txtServiceExtends.Text = @"com." + basePackage + ".service.GenericManager";
+            txtControllerExtends.Text = @"com." + basePackage + ".controller.BaseFormController";
+        }
+
+        private void RefreshLanguageOptions()
+        {
+            if (ddlLanguage.SelectedIndex == 2)
+            {
+                pnlDotNet.Visible = false;
+                pnlJava.Visible = true;
+            }
+            else
+            {
+                pnlDotNet.Visible = true;
+                pnlJava.Visible = false;
+            }
+        }
+
         private void SetNativeEnabled(bool enabled)
         {
             NativeMethods.SetWindowLong(Handle, GwlStyle, NativeMethods.GetWindowLong(Handle, GwlStyle) &
@@ -748,21 +908,29 @@ namespace LayerGen
             RefreshNamespaces();
         }
 
+        private void chkCustomPackageNames_CheckedChanged(object sender, EventArgs e)
+        {
+            RefreshPackageNames();
+        }
+
         private void txtMySqlDatabaseName_TextChanged(object sender, EventArgs e)
         {
             RefreshNamespaces();
+            RefreshPackageNames();
             ConfigureMySqlConnectionString();
         }
 
         private void txtDatabaseName_TextChanged(object sender, EventArgs e)
         {
             RefreshNamespaces();
+            RefreshPackageNames();
             ConfigureSqlServerConnectionString();
         }
 
         private void txtSqliteFileName_TextChanged(object sender, EventArgs e)
         {
             RefreshNamespaces();
+            RefreshPackageNames();
             ConfigureSqliteConnectionString();
         }
         
@@ -775,6 +943,8 @@ namespace LayerGen
         private void ddlLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
             RefreshNamespaces();
+            RefreshPackageNames();
+            RefreshLanguageOptions();
         }
 
         private void chkSqliteCustomConnectionString_CheckedChanged(object sender, EventArgs e)

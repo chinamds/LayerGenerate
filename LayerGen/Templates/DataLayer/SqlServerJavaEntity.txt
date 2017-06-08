@@ -1,7 +1,7 @@
 ﻿{$Comment1}
 package {26};
 
-import {26}.BaseObject;
+import {11};
 
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.DocumentId;
@@ -44,10 +44,10 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name="{9}"{4} )
+@Table(name="{9}"{4})
 @Indexed
 @XmlRootElement
-public class {1} extends BaseObject implements Serializable {
+public class {1} extends {10} implements Serializable {
 {3}
 
 {5}

@@ -1,0 +1,26 @@
+﻿{$Comment1}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using {101};
+using {101}.Interfaces;
+
+namespace {26}.Interfaces
+{
+	public interface I{1}Repository : IRepository<{1}Dto>
+    {
+		/// <summary>
+        /// Fill the <paramref name="emptyCollection"/> with all the media templates in the current application. The return value is the same reference
+        /// as the parameter.
+        /// </summary>
+        /// <param name="emptyCollection">An empty <see cref="I{1}Collection"/> object to populate with the list of {8}s in the current
+        /// application. This parameter is required because the library that implements this interface does not have
+        /// the ability to directly instantiate any object that implements <see cref="I{1}Collection"/>.</param>
+        /// <returns>
+        /// Returns an <see cref="I{1}Collection"/> representing the {8}s in the current application. The returned object is the
+        /// same object in memory as the <paramref name="emptyCollection"/> parameter.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">Thrown when <paramref name="emptyCollection" /> is null.</exception>
+        I{1}Collection Get{1}s(I{1}Collection emptyCollection);
+	}
+}

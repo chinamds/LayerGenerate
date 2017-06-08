@@ -46,6 +46,19 @@ namespace LayerGen.DatabasePlugins
         public string DataObjectSuffix { get; set; }
         public string DatabaseContenxt { get; set; }
 
+        public string ModelPackageName { get; set; }
+        public string DaoPackageName { get; set; }
+        public string ServicePackageName { get; set; }
+        public string ControllerPackageName { get; set; }
+
+        public string ModelExtends { get; set; }
+        public string DaoExtends { get; set; }
+        public string ServiceExtends { get; set; }
+        public string ControllerExtends { get; set; }
+
+        public bool GenerateTestData { get; set; }
+        public bool AllowJsonSerialization { get; set; }
+
         private string ConnectionString
         {
             get
@@ -1838,7 +1851,7 @@ namespace LayerGen.DatabasePlugins
                 }
                 using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Entity\\JsonDateSerializer.java"))
                 {
-                    jsonDateSerializerTemplate.Replace("{26}", DataNamespaceName);
+                    jsonDateSerializerTemplate.Replace("{26}", ModelPackageName);
                     jsonDateSerializerTemplate.Replace("{100}", DataNamespaceName);
                     jsonDateSerializerTemplate.Replace("{101}", BusinessNamespaceName);
                     jsonDateSerializerTemplate.Replace("{102}", EventLogNamespaceName);
@@ -1926,6 +1939,9 @@ namespace LayerGen.DatabasePlugins
                     dataLayerTemplate.Replace("{2}", DefaultSchema);
                     dataLayerTemplate.Replace("{4}", uniqueIndex);
                     dataLayerTemplate.Replace("{8}", DatabaseName);//@Table(name="{9}",catalog="{8}"{4} ) 
+                    string baseClass = ModelExtends.Substring(ModelExtends.LastIndexOf('.') + 1);
+                    dataLayerTemplate.Replace("{10}", baseClass);
+                    dataLayerTemplate.Replace("{11}", ModelExtends);
 
                     var fieldsPart = new StringBuilder();
                     foreach (var field in fields)
@@ -2113,12 +2129,12 @@ namespace LayerGen.DatabasePlugins
                     dataLayerTemplate.Replace("{7}", toStringPart.ToString());
 
                     //dataLayerTemplate.Replace("{9}", strKeyFieldName);
-                    dataLayerTemplate.Replace("{26}", DataNamespaceName);
+                    dataLayerTemplate.Replace("{26}", ModelPackageName);
                     dataLayerTemplate.Replace("{100}", DataNamespaceName);
                     dataLayerTemplate.Replace("{101}", BusinessNamespaceName);
                     dataLayerTemplate.Replace("{102}", EventLogNamespaceName);
 
-                    Common.DoComments(ref dataLayerTemplate, "//", IncludeComments);
+                    Common.DoComments(ref dataLayerTemplate, "//", IncludeComments, CustomComments);
 
                     sw.Write(dataLayerTemplate);
                 }

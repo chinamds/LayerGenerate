@@ -467,13 +467,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Layergen3x.ico" />
+    <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpIRepo.txt" />
     <EmbeddedResource Include="Templates\DataLayer\JsonDateSerializer.txt" />
+    <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpRepo.txt" />
     <EmbeddedResource Include="Templates\DataLayer\SqlServerScript.txt" />
     <EmbeddedResource Include="Templates\DataLayer\SqlServerJavaEntity.txt" />
     <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpController.txt" />
     <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpDto.txt" />
     <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpInit.txt" />
-    <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpRepo.txt" />
     <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpIC.txt" />
     <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpCollection.txt" />
     <EmbeddedResource Include="Templates\DataLayer\SqlServerCSharpI.txt" />

@@ -148,6 +148,26 @@ else the table will be skipped!
   <metadata name="openFileDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>186, 17</value>
   </metadata>
+  <data name="pictureBox4.ToolTip" xml:space="preserve">
+    <value>If checked, LayerGen will automatically create methods
+that allow data to be serialized in various formats, such
+as JSON and XML. These methods will require a
+reference to Newtonsoft's Json.Net library, which can be
+freely downloaded from their website.</value>
+  </data>
+  <data name="pictureBox6.ToolTip" xml:space="preserve">
+    <value>If checked, code will be generated that will allow you to
+retrieve data through a Sql statement or a stored procedure
+and dynamically bind it to a strongly typed class. This
+feature will require .NET 4.0 or higher.</value>
+  </data>
+  <data name="pictureBox9.ToolTip" xml:space="preserve">
+    <value>Check this box if you want to create custom package
+names for both the model, dao, service and controller layers. If this box
+is unchecked, the package name will automatically be
+created using the names "com.&lt;database name&gt;.model"
+and "com.&lt;database name&gt;.dao" etc.</value>
+  </data>
   <data name="pbHelpAllowSerialization.ToolTip" xml:space="preserve">
     <value>If checked, LayerGen will automatically create methods
 that allow data to be serialized in various formats, such
@@ -168,6 +188,9 @@ is unchecked, the namespace name will automatically be
 created using the names "DataLayer.&lt;database name&gt;"
 and "BusinessLayer.&lt;database name&gt;".</value>
   </data>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>25</value>
+  </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
