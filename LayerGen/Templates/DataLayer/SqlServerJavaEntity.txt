@@ -3,6 +3,8 @@ package {26};
 
 import {11};
 
+{12}
+
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.DocumentId;
 import org.hibernate.search.annotations.Field;

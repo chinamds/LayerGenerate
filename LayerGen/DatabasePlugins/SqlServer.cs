@@ -1834,6 +1834,7 @@ namespace LayerGen.DatabasePlugins
                 Directory.CreateDirectory(OutputDirectory + "\\Entity");
             }
 
+            string basePackageName = ModelExtends.Substring(0, ModelExtends.LastIndexOf('.'));
             if (AllowSerialization)
             {
                 var assembly = Assembly.GetExecutingAssembly();
@@ -1851,7 +1852,7 @@ namespace LayerGen.DatabasePlugins
                 }
                 using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Entity\\JsonDateSerializer.java"))
                 {
-                    jsonDateSerializerTemplate.Replace("{26}", ModelPackageName);
+                    jsonDateSerializerTemplate.Replace("{26}", basePackageName);
                     jsonDateSerializerTemplate.Replace("{100}", DataNamespaceName);
                     jsonDateSerializerTemplate.Replace("{101}", BusinessNamespaceName);
                     jsonDateSerializerTemplate.Replace("{102}", EventLogNamespaceName);
@@ -1942,6 +1943,14 @@ namespace LayerGen.DatabasePlugins
                     string baseClass = ModelExtends.Substring(ModelExtends.LastIndexOf('.') + 1);
                     dataLayerTemplate.Replace("{10}", baseClass);
                     dataLayerTemplate.Replace("{11}", ModelExtends);
+                    string jsonImport = "";
+                    if (AllowJsonSerialization)
+                    {
+                        jsonImport = "import com.fasterxml.jackson.annotation.JsonProperty;" +
+                        Environment.NewLine + "import com.fasterxml.jackson.databind.annotation.JsonSerialize;" +
+                        Environment.NewLine + "import "+ basePackageName + ".JsonDateSerializer;";
+                    }
+                    dataLayerTemplate.Replace("{12}", jsonImport);
 
                     var fieldsPart = new StringBuilder();
                     foreach (var field in fields)
@@ -1953,7 +1962,7 @@ namespace LayerGen.DatabasePlugins
                     List<string> flds = new List<string>();
                     foreach (var field in fields)
                     {
-                        if (AllowSerialization)
+                        if (AllowJsonSerialization)
                         {
                             fieldsPart.AppendLine(string.Format("    @JsonProperty(value = \"{0}\")", field.FieldName));
                             if (field.JavaDataType == "Date")
