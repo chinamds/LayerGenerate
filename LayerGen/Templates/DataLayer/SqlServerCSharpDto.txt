@@ -7,7 +7,7 @@ namespace {26}
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("{2}.{1}")]
+    [Table("{2}.{4}")]
     public partial class {1}Dto
     {
 {3}

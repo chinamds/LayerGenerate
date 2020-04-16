@@ -163,24 +163,141 @@ namespace LayerGen.DatabasePlugins
             return originalName.Replace(" ", "_");
         }
 
-        internal static string GetCsPropertyName(string fieldName, string className)
+        internal static string GetCsPropertyName(string fieldName, string className, string fieldType = null)
         {
             if (GetCsPropertyName(fieldName) == className)
-                return GetCsPropertyName(fieldName) + "_";
-            return GetCsPropertyName(fieldName);
+                return GetCsPropertyName(fieldName, fieldType) + "_";
+            return GetCsPropertyName(fieldName, fieldType);
         }
 
-        internal static string GetCsPropertyName(string fieldName)
+        internal static string GetCsPropertyName(string fieldName, string fieldType = null)
         {
             if (fieldName == "uiID")
             {
-                return "uiID";
+                return "Id";
             }
-            if (char.IsNumber(fieldName[0]))
+
+            string propertyName = fieldName;
+            if (!string.IsNullOrEmpty(fieldType))
             {
-                return "_" + Char.ToUpperInvariant(fieldName[0]) + fieldName.Substring(1);
+                if (fieldType == "Table")
+                {
+                    if (fieldName.StartsWith("3g", StringComparison.Ordinal))
+                    {
+                        propertyName = "mobile" + fieldName.Substring(2);
+                    }
+                    if (char.IsNumber(propertyName[0]))
+                    {
+                        return "_" + Char.ToUpperInvariant(propertyName[0]) + propertyName.Substring(1);
+                    }
+                    return GetSafeCsName(Char.ToUpperInvariant(propertyName[0]) + propertyName.Substring(1));
+                }
+
+                switch (fieldType.ToLower())
+                {
+                    case "bool":
+                        if (fieldName.StartsWith("b", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(1);
+                        }
+                        break;
+                    case "byte[]":
+                        if (fieldName.StartsWith("by", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(2);
+                        }
+                        else if (fieldName.StartsWith("str", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(3);
+                        }
+                        break;
+                    case "byte":
+                    case "short":
+                    case "int":
+                    case "integer":
+                    case "long":
+                        if (fieldName.StartsWith("n", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(1);
+                        }
+                        else if (fieldName.StartsWith("dw", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(2);
+                        }
+                        else if (fieldName.StartsWith("ui", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(2);
+                        }
+                        else if (fieldName.StartsWith("cr", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(2);
+                        }
+                        else if (fieldName.StartsWith("l", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(1);
+                        }
+                        if (propertyName.EndsWith("ID", StringComparison.Ordinal))
+                        {
+                            propertyName = propertyName.Substring(0, propertyName.Length - 1) + "d";
+                        }
+                        break;
+                    case "string":
+                        if (fieldName.StartsWith("str", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(3);
+                        }
+                        else if (fieldName.StartsWith("s", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(1);
+                        }
+                        break;
+                    case "datetime":
+                        if (fieldName.StartsWith("dt", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(2);
+                        }
+                        else if (fieldName.StartsWith("t", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(1);
+                        }
+                        break;
+                    case "decimal":
+                    case "double":
+                    case "float":
+                        if (fieldName.StartsWith("db", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(1);
+                        }
+                        else if (fieldName.StartsWith("d", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(1);
+                        }
+                        else if (fieldName.StartsWith("f", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(1);
+                        }
+                        else if (fieldName.StartsWith("n", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(1);
+                        }
+                        break;
+                    case "timespan":
+                        break;
+                    case "guid":
+                        if (fieldName.StartsWith("guid", StringComparison.Ordinal))
+                        {
+                            propertyName = fieldName.Substring(4);
+                        }
+                        break;
+                }
             }
-            return GetSafeCsName(Char.ToUpperInvariant(fieldName[0]) + fieldName.Substring(1));
+
+            if (char.IsNumber(propertyName[0]))
+            {
+                return "_" + Char.ToUpperInvariant(propertyName[0]) + propertyName.Substring(1);
+            }
+
+            return GetSafeCsName(Char.ToUpperInvariant(propertyName[0]) + propertyName.Substring(1));
         }
 
         internal static string GetCsFieldName(string fieldName)

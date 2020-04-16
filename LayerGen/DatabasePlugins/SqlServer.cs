@@ -493,7 +493,7 @@ namespace LayerGen.DatabasePlugins
                     }
                     businessLayerTemplate.Replace("{3}", enumsPart.ToString().TrimEnd(Environment.NewLine.ToCharArray()).TrimEnd(','));
 
-                    businessLayerTemplate.Replace("{0}", Common.GetSafeCsName(Common.GetCsPropertyName(objName)));
+                    businessLayerTemplate.Replace("{0}", Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")));
                     businessLayerTemplate.Replace("{99}", objName);
                     if (!isView)
                     {
@@ -527,7 +527,7 @@ namespace LayerGen.DatabasePlugins
                                 }
                             }
                             fkBusinessGetBy.Append("        {" + Environment.NewLine);
-                            fkBusinessGetBy.Append("            DataTable dt = " + DataNamespaceName + "." + Common.GetSafeCsName(Common.GetCsPropertyName(objName)) + ".GetBy" + Common.GetSafeCsName(Common.GetCsPropertyName(key.ForeignColumnName)) + "(fkId);" + Environment.NewLine);
+                            fkBusinessGetBy.Append("            DataTable dt = " + DataNamespaceName + "." + Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")) + ".GetBy" + Common.GetSafeCsName(Common.GetCsPropertyName(key.ForeignColumnName)) + "(fkId);" + Environment.NewLine);
                             fkBusinessGetBy.Append("            if (dt != null)" + Environment.NewLine);
                             fkBusinessGetBy.Append("            {" + Environment.NewLine);
                             fkBusinessGetBy.Append("                Load(dt.Rows);" + Environment.NewLine);
@@ -1019,12 +1019,12 @@ namespace LayerGen.DatabasePlugins
                 {
                     continue;
                 }
-                string objNameWithSuffix = Common.GetSafeCsName(Common.GetCsPropertyName(objName)) + DataObjectSuffix;//"Obj";
+                string objNameWithSuffix = Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")) + DataObjectSuffix;//"Obj";
                 using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Business\\" + objNameWithSuffix + ".cs"))
                 {
-                    storedProcedures.Append(CreateStoredProcedures(Common.GetSafeCsName(Common.GetCsPropertyName(objName)), fields, isView));
+                    storedProcedures.Append(CreateStoredProcedures(Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")), fields, isView));
 
-                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName)));
+                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")));
                     dataLayerTemplate.Replace("{5}", objNameWithSuffix);
 
                     var fieldsPart = new StringBuilder();
@@ -1127,7 +1127,7 @@ namespace LayerGen.DatabasePlugins
                     dataLayerTemplate.Replace("{102}", EventLogNamespaceName);
 
                     var objcopyPart = new StringBuilder();
-                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName));
+                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table"));
                     string strObjNameL = strObjName.Substring(0, 1).ToLower() + strObjName.Substring(1, strObjName.Length - 1);
                     string strObjNameCopy = strObjNameL + "Copy";
                     objcopyPart.AppendLine(string.Format("I{0} {1} = new {2}();", strObjName, strObjNameCopy, objNameWithSuffix));
@@ -1145,7 +1145,7 @@ namespace LayerGen.DatabasePlugins
                     if (PrimaryKeyField != null && PrimaryKeyField.IsIdentity)
                     {
                         objSavePart.AppendLine("            bool isNew = IsNew;");
-                        objSavePart.AppendLine(string.Format("            using (var repo = new {0}Repository())", Common.GetSafeCsName(Common.GetCsPropertyName(objName))));
+                        objSavePart.AppendLine(string.Format("            using (var repo = new {0}Repository())", Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table"))));
                         objSavePart.AppendLine("            {");
                         objSavePart.AppendLine("                if (IsNew)");
                         objSavePart.AppendLine("                {");
@@ -1183,7 +1183,7 @@ namespace LayerGen.DatabasePlugins
                     }
                     else
                     {
-                        objSavePart.AppendLine(string.Format("            using (var repo = new {0}Repository())", Common.GetSafeCsName(Common.GetCsPropertyName(objName))));
+                        objSavePart.AppendLine(string.Format("            using (var repo = new {0}Repository())", Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table"))));
                         objSavePart.AppendLine("            {");
                         objSavePart.AppendLine(string.Format("                var {1} = repo.Find({0});", strKeyFieldName, strObjNameDto));
                         objSavePart.AppendLine(string.Format("                if ({0} != null)", strObjNameDto));
@@ -1283,11 +1283,11 @@ namespace LayerGen.DatabasePlugins
                 {
                     continue;
                 }
-                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Controller\\" + Common.GetSafeCsName(Common.GetCsPropertyName(objName)) + "DDX.cs"))
+                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Controller\\" + Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")) + "DDX.cs"))
                 {
-                    storedProcedures.Append(CreateStoredProcedures(Common.GetSafeCsName(Common.GetCsPropertyName(objName)), fields, isView));
+                    storedProcedures.Append(CreateStoredProcedures(Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")), fields, isView));
 
-                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName)));
+                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")));
 
                     string pkCsName = fields.First(z => z.IsPrimaryKey).SafeCsFieldName;
                     string strKeyFieldName = fields.First(z => z.IsPrimaryKey).SafeCsPropertyName;
@@ -1296,7 +1296,7 @@ namespace LayerGen.DatabasePlugins
                     dataLayerTemplate.Replace("{101}", BusinessNamespaceName);
                     dataLayerTemplate.Replace("{102}", EventLogNamespaceName);
 
-                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName));
+                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table"));
                     string strObjNameL = strObjName.Substring(0, 1).ToLower() + strObjName.Substring(1, strObjName.Length - 1);
                    
                     dataLayerTemplate.Replace("{8}", strObjNameL);
@@ -1390,9 +1390,9 @@ namespace LayerGen.DatabasePlugins
                 {
                     continue;
                 }
-                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Interfaces\\I" + Common.GetSafeCsName(Common.GetCsPropertyName(objName)) + ".cs"))
+                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Interfaces\\I" + Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")) + ".cs"))
                 {
-                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName)));
+                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")));
 
                     var fieldsPart = new StringBuilder();
                     foreach (var field in fields)
@@ -1408,7 +1408,7 @@ namespace LayerGen.DatabasePlugins
                     }
                     dataLayerTemplate.Replace("{2}", fieldsPart.ToString());
 
-                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName));
+                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table"));
                     string strObjNameL = strObjName.Substring(0, 1).ToLower() + strObjName.Substring(1, strObjName.Length - 1);
                     dataLayerTemplate.Replace("{8}", strObjNameL);                  
 
@@ -1461,14 +1461,14 @@ namespace LayerGen.DatabasePlugins
                 {
                     continue;
                 }
-                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Business\\" + Common.GetSafeCsName(Common.GetCsPropertyName(objName)) + "Collection.cs"))
+                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Business\\" + Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")) + "Collection.cs"))
                 {
-                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName)));
-                    string objNameWithSuffix = Common.GetSafeCsName(Common.GetCsPropertyName(objName)) + DataObjectSuffix;//"Obj";
+                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")));
+                    string objNameWithSuffix = Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")) + DataObjectSuffix;//"Obj";
                     dataLayerTemplate.Replace("{5}", objNameWithSuffix);
 
                     
-                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName));
+                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table"));
                     string strObjNameL = strObjName.Substring(0, 1).ToLower() + strObjName.Substring(1, strObjName.Length - 1);
                     dataLayerTemplate.Replace("{8}", strObjNameL);
 
@@ -1530,12 +1530,12 @@ namespace LayerGen.DatabasePlugins
                 {
                     continue;
                 }
-                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Interfaces\\I" + Common.GetSafeCsName(Common.GetCsPropertyName(objName)) + "Collection.cs"))
+                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Interfaces\\I" + Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")) + "Collection.cs"))
                 {
-                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName)));
+                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")));
 
 
-                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName));
+                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table"));
                     string strObjNameL = strObjName.Substring(0, 1).ToLower() + strObjName.Substring(1, strObjName.Length - 1);
                     dataLayerTemplate.Replace("{8}", strObjNameL);
 
@@ -1597,10 +1597,10 @@ namespace LayerGen.DatabasePlugins
                 {
                     continue;
                 }
-                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Repository\\" + Common.GetSafeCsName(Common.GetCsPropertyName(objName)) + "Repository.cs"))
+                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Repository\\" + Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")) + "Repository.cs"))
                 {
-                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName)));
-                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName));
+                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")));
+                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table"));
                     string strObjNameL = strObjName.Substring(0, 1).ToLower() + strObjName.Substring(1, strObjName.Length - 1);
                     dataLayerTemplate.Replace("{8}", strObjNameL);
 
@@ -1650,9 +1650,10 @@ namespace LayerGen.DatabasePlugins
                 {
                     continue;
                 }
-                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Entity\\" + Common.GetSafeCsName(Common.GetCsPropertyName(objName)) + "Dto.cs"))
+                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\Entity\\" + Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")) + "Dto.cs"))
                 {
-                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName)));
+                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")));
+                    dataLayerTemplate.Replace("{4}", objName);
                     dataLayerTemplate.Replace("{2}", DefaultSchema);
 
                     var fieldsPart = new StringBuilder();
@@ -1668,6 +1669,10 @@ namespace LayerGen.DatabasePlugins
                                 fieldsPart.AppendLine(string.Format("        [StringLength({0})]", field.SqlLength / sizeof(char)));
                             else
                                 fieldsPart.AppendLine("        [MaxLength]");
+                        }
+                        if (string.Compare(field.FieldName, field.SafeCsPropertyName, true) != 0)
+                        {
+                            fieldsPart.AppendLine("        [Column(\"" + field.FieldName + "\")]");
                         }
 
                         if (field.CanBeNull && field.CsDataType != "string" && !field.CsDataType.Contains("[]"))
@@ -1731,14 +1736,14 @@ namespace LayerGen.DatabasePlugins
                 if (dt == null)
                     continue;
 
-                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\DBSeed\\" + Common.GetSafeCsName(Common.GetCsPropertyName(objName)) + ".cs"))
+                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\DBSeed\\" + Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")) + ".cs"))
                 {
-                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName)));
+                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")));
 
                     var fieldsPart = new StringBuilder();
                     foreach (DataRow dr in dt.Rows)
                     {
-                        string record = "						new " + Common.GetSafeCsName(Common.GetCsPropertyName(objName)) + "Dto {";
+                        string record = "						new " + Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")) + "Dto {";
                         foreach (var field in fields)
                         {
                             if (!field.IsIdentity)
@@ -1806,7 +1811,7 @@ namespace LayerGen.DatabasePlugins
                     }
                     dataLayerTemplate.Replace("{14}", fieldsPart.ToString());
 
-                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName));
+                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table"));
                     string strObjNameL = strObjName.Substring(0, 1).ToLower() + strObjName.Substring(1, strObjName.Length - 1);
                     dataLayerTemplate.Replace("{8}", strObjNameL);
 
@@ -2144,6 +2149,139 @@ namespace LayerGen.DatabasePlugins
                     dataLayerTemplate.Replace("{102}", EventLogNamespaceName);
 
                     Common.DoComments(ref dataLayerTemplate, "//", IncludeComments, CustomComments);
+
+                    sw.Write(dataLayerTemplate);
+                }
+            }
+        }
+
+        private void CreateJavaSeedDataLayers()
+        {
+            if (!Directory.Exists(OutputDirectory + "\\DBJSeed"))
+            {
+                Directory.CreateDirectory(OutputDirectory + "\\DBJSeed");
+            }
+            foreach (string objectName in Objects.Split(';'))
+            {
+                //UpdateProgress(_progressNdx, Objects.Split(';').Length * 2);
+                //_progressNdx++;
+                var assembly = Assembly.GetExecutingAssembly();
+                StringBuilder dataLayerTemplate = new StringBuilder();
+
+                using (Stream stream = assembly.GetManifestResourceStream("LayerGen.Templates.DataLayer.SqlServerCSharpInit.txt"))
+                {
+                    if (stream != null)
+                    {
+                        using (var reader = new StreamReader(stream))
+                        {
+                            dataLayerTemplate.Append(reader.ReadToEnd());
+                        }
+                    }
+                }
+
+                string objName = objectName.Trim();
+                bool isView = IsView(objName);
+
+                List<Field> fields = MapFields(objName);
+
+                if (!HasPrimaryKey(fields) && !isView)
+                {
+                    continue;
+                }
+                DataTable dt = GetInitDatas(objName);
+                if (dt == null)
+                    continue;
+
+                using (StreamWriter sw = File.CreateText(OutputDirectory + "\\DBJSeed\\" + Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table")) + ".java"))
+                {
+                    dataLayerTemplate.Replace("{1}", Common.GetSafeCsName(Common.GetCsPropertyName(objName)));
+
+                    var fieldsPart = new StringBuilder();
+                    foreach (DataRow dr in dt.Rows)
+                    {
+                        string record = "						new " + Common.GetSafeCsName(Common.GetCsPropertyName(objName)) + "Dto {";
+                        foreach (var field in fields)
+                        {
+                            if (!field.IsIdentity)
+                            {
+                                record += field.SafeCsPropertyName;
+                                if (dr[field.FieldName] == DBNull.Value)
+                                {
+                                    record += " = null, ";
+                                }
+                                else
+                                {
+                                    if (field.CsDataType == "string")
+                                    {
+                                        record += " = \"";
+                                    }
+                                    else
+                                    {
+                                        record += " = ";
+                                    }
+
+                                    if (field.CsDataType == "bool")
+                                    {
+                                        record += (dr[field.FieldName].Equals(true) ? "true" : "false");
+                                    }
+                                    else
+                                        record += dr[field.FieldName].ToString();
+                                    if (field.CsDataType == "string")
+                                    {
+                                        record += "\", ";
+                                    }
+                                    else
+                                        record += ", ";
+                                }
+                            }
+                        }
+                        record += "},";
+                        fieldsPart.AppendLine(record);
+                    }
+                    if (objName == "MenuFunc")
+                    {
+                        fieldsPart.AppendLine(" ");
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            if (dr["FuncURL"] == DBNull.Value || string.IsNullOrEmpty(dr["FuncURL"].ToString()))
+                                continue;
+
+                            string strFunc = dr["FuncURL"].ToString();
+                            if (strFunc.IndexOf('.') > 0)
+                                strFunc = strFunc.Substring(0, strFunc.IndexOf('.'));
+                            fieldsPart.AppendLine(strFunc + ",");
+                        }
+
+                        fieldsPart.AppendLine(" ");
+                        foreach (DataRow dr in dt.Rows)
+                        {
+                            if (dr["FuncURL"] == DBNull.Value || string.IsNullOrEmpty(dr["FuncURL"].ToString()))
+                                continue;
+
+                            string strFunc = dr["FuncURL"].ToString();
+                            if (strFunc.IndexOf('.') > 0)
+                                strFunc = strFunc.Substring(0, strFunc.IndexOf('.'));
+                            fieldsPart.AppendLine("case PageId." + strFunc + ":");
+                            fieldsPart.AppendLine("  return \"" + dr["ID"] + "\";");
+                        }
+                    }
+                    dataLayerTemplate.Replace("{14}", fieldsPart.ToString());
+
+                    string strObjName = Common.GetSafeCsName(Common.GetCsPropertyName(objName, "Table"));
+                    string strObjNameL = strObjName.Substring(0, 1).ToLower() + strObjName.Substring(1, strObjName.Length - 1);
+                    dataLayerTemplate.Replace("{8}", strObjNameL);
+
+                    string pkCsName = fields.First(z => z.IsPrimaryKey).SafeCsFieldName;
+                    string strKeyFieldName = fields.First(z => z.IsPrimaryKey).SafeCsPropertyName;
+
+                    dataLayerTemplate.Replace("{9}", strKeyFieldName);
+                    dataLayerTemplate.Replace("{26}", BusinessNamespaceName + ".Interfaces");
+                    dataLayerTemplate.Replace("{13}", DatabaseContenxt);
+                    dataLayerTemplate.Replace("{100}", DataNamespaceName);
+                    dataLayerTemplate.Replace("{101}", BusinessNamespaceName);
+                    dataLayerTemplate.Replace("{102}", EventLogNamespaceName);
+
+                    Common.DoComments(ref dataLayerTemplate, "//", IncludeComments);
 
                     sw.Write(dataLayerTemplate);
                 }
@@ -3125,13 +3263,17 @@ namespace LayerGen.DatabasePlugins
                                     field.FieldName = (string) row["COLUMN_NAME"];
                                     field.IsPrimaryKey = IsPrimaryKey(tableName, field.FieldName);
                                     field.IsIdentity = ((string) row["TYPE_NAME"]).ToLower().Trim().EndsWith("identity");
+
                                     field.CsDataType = GetCsDataType(((string) row["TYPE_NAME"]).Trim());
                                     field.JavaMappingType = GetJavaMappingType(((string)row["TYPE_NAME"]).Trim());
                                     field.VbDataType = GetVbDataType(((string) row["TYPE_NAME"]).Trim());
+
                                     field.SafeCsFieldName = Common.GetSafeCsName(Common.GetCsFieldName(field.FieldName));
-                                    field.SafeCsPropertyName = Common.GetSafeCsName(Common.GetCsPropertyName(field.FieldName, Common.GetSafeCsName(Common.GetCsPropertyName(tableName))));
+                                    field.SafeCsPropertyName = Common.GetSafeCsName(Common.GetCsPropertyName(field.FieldName, Common.GetSafeCsName(Common.GetCsPropertyName(tableName, "Table")), field.CsDataType));
+
                                     field.SafeVbFieldName = Common.GetSafeVbName(Common.GetVbFieldName(field.FieldName));
                                     field.SafeVbPropertyName = Common.GetSafeVbName(Common.GetVbPropertyName(field.FieldName, Common.GetSafeVbName(Common.GetVbPropertyName(tableName))));
+
                                     field.SqlDbType = GetSqlDbTypeFromSqlType(((string) row["TYPE_NAME"]).Trim());
                                     field.IntrinsicSqlDataType = ((string) row["TYPE_NAME"]).ToUpper().Trim();
                                     field.IntrinsicSqlDataType = field.IntrinsicSqlDataType.Replace(" IDENTITY", "").Trim();
